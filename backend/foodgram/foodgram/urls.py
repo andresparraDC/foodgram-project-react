@@ -1,21 +1,17 @@
-"""foodgram URL Configuration
+"""
+Спринт 14
+Проект: 
+Автор: Фредди Андрес Парра
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/2.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
+Имя файла: urls.py
+Описание файла: Он регистрирует список адресов в Django.
+Переменные:
+ - urlpatterns -> список адресов
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import include, path
 
 urlpatterns = [
+    path('', include('foodgram_app.urls', namespace='foodgram_app')),
     path('admin/', admin.site.urls),
 ]
