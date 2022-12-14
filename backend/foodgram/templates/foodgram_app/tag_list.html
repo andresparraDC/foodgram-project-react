@@ -8,7 +8,7 @@
 
 {% block title%}
   <h1>
-    Главная страница Foodgram
+      Рецепты с тегом: {{ recipe.tag.slug }}
   </h1>
 {%endblock%}
 
@@ -22,16 +22,10 @@
         Image: {{ recipe.image }}
       </li>
       <li>
-        Ингредиент: {{ recipe.ingredients }}
-      </li>
-      <li>
         Автор: {{ recipe.author }}
       </li>
       <li>
         Дата публикации: {{ recipe.pub_date|date:"d E Y" }}
-      </li>
-      <li>
-        Тег: {{ recipe.tag.name }}
       </li>
     </ul>
     <p>

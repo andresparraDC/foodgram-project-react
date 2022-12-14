@@ -1,7 +1,6 @@
-"""
-Спринт 14
-Проект: 
+""" Спринт 14 Проект «Продуктовый помощник»  
 Автор: Фредди Андрес Парра
+Студент факультета Бэкенд. Когорта 14+
 
 Имя файла: urls.py
 Описание файла: записывает все адреса в приложении: foodgram_app
@@ -10,12 +9,14 @@
    - 
 """
 from django.urls import path
+
 from . import views
+
 
 app_name = 'foodgram_app'
 
+
 urlpatterns = [
-    path('', views.index),
-    path('foodgram_app/', views.food_list),
-    path('foodgram_app/<slug:slug>/', views.food_detail),
+    path('', views.index, name='index'),
+    path('tag/<slug:slug>/', views.tag_recipes, name="tag_list")
 ]
