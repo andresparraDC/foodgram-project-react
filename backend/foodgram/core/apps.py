@@ -2,11 +2,11 @@
 Автор: Фредди Андрес Парра
 Студент факультета Бэкенд. Когорта 14+ 
 
-apps.py -> настройки конфигурации приложения: foodgram_app
+apps.py -> настройки конфигурации приложения: core
 """
 from django.apps import AppConfig
 
 
-class FoodgramAppConfig(AppConfig):
-    """Method required when the Foodgram application is created."""
-    name = 'foodgram_app'
+class CoreConfig(AppConfig):
+    """Method required when the Core application is created."""
+    name = 'core'

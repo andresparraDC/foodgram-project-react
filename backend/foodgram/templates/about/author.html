@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head_title%}
+  <title>
+    Авторе проекта
+  </title>
+{%endblock%}
+
+{% block title%}
+  <h1>
+    Авторе проекта
+  </h1>
+{%endblock%}
+
+{% block content %} 
+  <div class="row justify-content-center"> <!-- row -->
+    <div class="col-md-8 p-5"> <!-- col --> 
+      <div class="card"> <!-- card --> 
+        <div class="card-header"> 
+          Обо мне 
+        </div> 
+        <div class="card-body"> <!-- card body --> 
+          <table class="default" style="width:100%"> 
+            <tr> 
+              <td style="width:70%"> 
+                <p align="justify"> 
+                  Привет, я Андрес... 
+                </p> 
+              </td> 
+              <td style="width:30%"> 
+                <p align="center"> 
+                  <img src="{% static 'img/fapo.png'  %}" 
+                       width="140" 
+                       height="110" 
+                       class="d-inline-block align-top" 
+                       alt=""> 
+                </p> 
+              </td> 
+            </tr> 
+          </table> 
+        </div> <!-- card body --> 
+      </div> <!-- card --> 
+      <div class="card"> <!-- card --> 
+        <div class="card-header"> 
+          Ссылки 
+        </div> 
+        <div class="card-body"> <!-- card body --> 
+          <table class="default" style="width:100%"> 
+            <tr> 
+              <td style="width:30%"> 
+                <p align="center"> 
+                  <img src="{% static 'img/githublogo.png'  %}" 
+                       width="40" 
+                       height="40" 
+                       class="d-inline-block align-top" 
+                       alt=""> 
+                </p> 
+              </td> 
+              <td> 
+                <a href="https://github.com/andresparraDC" target="_blank">
+                    Github account
+                </a> 
+              </td> 
+            </tr> 
+            <tr> 
+              <td style="width:30%"> 
+                <p align="center"> 
+                  <img src="{% static 'img/crowdinlogo.png'  %}" 
+                       width="40" 
+                       height="40" 
+                       class="d-inline-block align-top" 
+                       alt=""> 
+                </p> 
+              </td> 
+              <td> 
+                <a href="https://crowdin.com/profile/freddyandresparra" target="_blank">
+                    Crowdin Ethereum.org
+                </a> 
+              </td> 
+            </tr>
+          </table> 
+        </div> <!-- card body --> 
+      </div> <!-- card --> 
+    </div> <!-- col -->   
+  </div> <!-- row -->
+{% endblock %}

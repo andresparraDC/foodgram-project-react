@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block head_title%}
+  <title>
+    Технологии
+  </title>
+{%endblock%}
+
+{% block title%}
+  <h1>
+    Технологии
+  </h1>
+{%endblock%}
+
+{% block content %}
+  <div class="row justify-content-center"> <!-- row --> 
+    <div class="col-md-8 p-5"> <!-- col --> 
+      <div class="card"> <!-- card --> 
+        <div class="card-header"> 
+          Список 
+        </div> 
+        <div class="card-body"> <!-- card body --> 
+          <table class="default" style="width:100%"> 
+            <tr> 
+              <td style="width:30%"> 
+                <p align="center"> 
+                  <img src="{% static 'img/pythonlogo.png'  %}" 
+                       width="40" 
+                       height="40" 
+                       class="d-inline-block align-top" 
+                       alt=""> 
+                </p> 
+              </td> 
+              <td> 
+                <a href="https://www.python.org/" target="_blank">
+                    Python 3.7.9
+                </a> 
+              </td> 
+            </tr> 
+            <tr> 
+              <td style="width:30%"> 
+                <p align="center"> 
+                  <img src="{% static 'img/djangologo.png'  %}" 
+                       width="40" 
+                       height="40" 
+                       class="d-inline-block align-top" 
+                       alt=""> 
+                </p> 
+              </td> 
+              <td> 
+                <a href="https://www.djangoproject.com/" target="_blank">
+                    Django 2.2.28
+                </a> 
+              </td> 
+            </tr> 
+            <tr> 
+              <td style="width:30%"> 
+                <p align="center"> 
+                  <img src="{% static 'img/vsclogo.png'  %}" 
+                       width="40" 
+                       height="40" 
+                       class="d-inline-block align-top" 
+                       alt=""> 
+                </p> 
+              </td> 
+              <td> 
+                <a href="https://code.visualstudio.com/" target="_blank">
+                    Visual Studio Code
+                </a> 
+              </td> 
+            </tr> 
+          </table> 
+        </div> <!-- card body --> 
+      </div> <!-- card --> 
+    </div> <!-- col -->  
+  </div> <!-- row -->
+{% endblock %}

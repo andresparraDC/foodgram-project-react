@@ -13,7 +13,7 @@
 {%endblock%}
 
 {% block content%}
-  {% for recipe in recipes %}
+  {% for recipe in page_obj %}
     <ul>
       <li>
         Название: {{ recipe.name }}
@@ -46,4 +46,7 @@
       <hr>
     {% endif %}
   {% endfor %}
+
+  {% include 'foodgram_app/includes/paginator.html' %}
+
 {%endblock%}

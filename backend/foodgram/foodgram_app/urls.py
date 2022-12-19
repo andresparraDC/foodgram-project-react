@@ -18,5 +18,7 @@ app_name = 'foodgram_app'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('tag/<slug:slug>/', views.tag_recipes, name="tag_list")
+    path('tag/<slug:slug>/', views.tag_recipes, name="tag_list"),
+    path('profile/<str:username>/', views.profile, name='profile'),
+    path('recipes/<int_recipe_id>/', views.recipe_detail, name='recipe_detail'),
 ]

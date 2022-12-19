@@ -1,4 +1,7 @@
-"""
+""" Спринт 14 Проект «Продуктовый помощник»  
+Автор: Фредди Андрес Парра
+Студент факультета Бэкенд. Когорта 14+
+
 WSGI config for foodgram project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.

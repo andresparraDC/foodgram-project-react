@@ -2,11 +2,11 @@
 Автор: Фредди Андрес Парра
 Студент факультета Бэкенд. Когорта 14+ 
 
-apps.py -> настройки конфигурации приложения: foodgram_app
+apps.py -> настройки конфигурации приложения: about
 """
 from django.apps import AppConfig
 
 
-class FoodgramAppConfig(AppConfig):
-    """Method required when the Foodgram application is created."""
-    name = 'foodgram_app'
+class AboutConfig(AppConfig):
+    """Method required when the About application is created."""
+    name = 'about'

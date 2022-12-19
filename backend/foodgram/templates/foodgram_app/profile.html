@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block head_title%}
+  <title>
+    Профайл пользователя {{ author.get_full_name }}
+  </title>
+{%endblock%}
+
+{% block title%}
+  <h1>
+    Профайл пользователя {{ author.get_full_name }}
+  </h1>
+{%endblock%}
+
+{% block content %}
+  <div class="row justify-content-center"> <!-- row -->
+    <div class="col-md-8 p-5"> <!-- col -->
+      <div class="card"> <!-- card -->
+        <div class="card-header">
+          Всего рецептов {{ author.posts.all }} 
+        </div> 
+        <div class="card-body"> <!-- card body -->
+          {% for recipe in page_obj %}
+            <article>
+              <ul>
+                <li>
+                  Автор: {{ author.get_full_name }} 
+                </li> 
+                <li> 
+                  Дата публикации: {{ recipe.pub_date|date:"d E Y" }} 
+                </li> 
+                <li> 
+                  Группа: {{ recipe.tag }} 
+                  <a href="{% url 'foodgram_app:tag_list' recipe.tag.slug %}">
+                    все записи группы 
+                  </a> 
+                </li> 
+              </ul>
+              <p>
+                {{ recipe.text|linebreaksbr }} 
+              </p> 
+              <a href="{% url 'foodgram_app:recipe_detail' recipe.id %}">
+                подробная информация  
+              </a> 
+            </article>        
+            {% if not forloop.last %}
+              <hr> 
+            {% endif %} 
+          {% endfor %} 
+        </div> 
+      </div> 
+    </div> 
+    {% include 'foodgram_app/includes/paginator.html' %}
+  </div>
+{% endblock %}

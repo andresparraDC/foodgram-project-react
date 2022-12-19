@@ -1,0 +1,54 @@
+{% extends 'base.html' %} 
+
+{% block head_title%}
+  <title>
+    Рецепт
+  </title>
+{%endblock%}
+
+{% block title%}
+  <h1>
+    Рецепт
+  </h1>
+{%endblock%}
+
+{% block content %} 
+  <div class="row justify-content-center"> <!-- row --> 
+    <div class="col-md-8 p-5"> <!-- col --> 
+      <div class="card"> <!-- card --> 
+        <div class="card-header">
+          Рецепт: recipe.name
+        </div> 
+        <div class="card-body"> <!-- card body -->
+          <div class="row">
+            <aside class="col-20 col-md-3"> 
+              <ul class="list-group list-group-flush">
+                <li>
+                  <a href="{% url 'foodgram_app:profile' recipe.author %}">
+                    Автор: {{ recipe.author.get_full_name }}  
+                  </a>  
+                </li>  
+                <li>  
+                  Дата публикации: {{ recipe.pub_date|date:"d E Y" }}  
+                </li> 
+              </ul> 
+            </aside> 
+            <article class="col-12 col-md-9"> 
+              <p> 
+                {{ recipe.text|linebreaksbr }} 
+              </p> 
+              {% if request.user.is_authenticated %} 
+                <a class="btn btn-primary" href="{% url 'foodgram_app:recipe_edit' recipe.pk %}">
+                  редактировать запись 
+                </a> 
+                <a class="btn btn-primary" href="{% url 'foodgram_app:recipe_delete' recipe.pk %}">
+                  Удалить Пост 
+                </a> 
+              {%endif%} 
+            </article> 
+          </div>
+        </div> <!-- card body --> 
+      </div> <!-- card --> 
+    </div> <!-- col -->
+  </div> <!-- row -->
+{% endblock %}
