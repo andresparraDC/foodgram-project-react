@@ -15,6 +15,7 @@ class AboutAuthorView(TemplateView):
     the author information.'''
     template_name = 'about/author.html'
 
+
 class AboutTechView(TemplateView):
     '''To load the static page describing the 
     technology that was used.'''

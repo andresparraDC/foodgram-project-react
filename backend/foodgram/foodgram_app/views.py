@@ -7,11 +7,10 @@
 Переменные:
 
 """
-from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, render
 from .models import Recipe, Tag, User
 
-from foodgram.settings import NUM_RECIPES_PAGE, NUM_RECIPESAUTHOR_PAGE
+from .paginator import paginator_recipes
 
 
 app_name = 'foodgram_app'
@@ -28,10 +27,8 @@ def index(request):
     --recipes     переменная с объектами (рецептами).
     template      HTML-файл, который вы используете в представлении.
     """
-    recipes_list = Recipe.objects.all()
-    paginator = Paginator(recipes_list, NUM_RECIPES_PAGE)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    recipes = Recipe.objects.all()
+    page_obj = paginator_recipes(request, recipes, 1)
     context = {
         'title': 'Index Foodgram',
         'page_obj': page_obj,
@@ -57,7 +54,7 @@ def tag_recipes(request, slug):
     template      HTML-файл, который вы используете в представлении.
     """
     tag = get_object_or_404(Tag, slug=slug)
-    recipes = tag.recipes.all()[:NUM_RECIPES_PAGE]
+    recipes = tag.recipes.all()[:6]
     context = {
         'recipes': recipes,
         'tag': tag,
@@ -73,9 +70,7 @@ def tag_recipes(request, slug):
 def profile(request, username):
     author = User.objects.get(username=username)
     recipes = Recipe.objects.filter(author=author.pk)
-    paginator = Paginator(recipes, NUM_RECIPESAUTHOR_PAGE)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    page_obj = paginator_recipes(request, recipes, 2)
     context = {
         'author': author,
         'page_obj': page_obj,
