@@ -30,7 +30,6 @@ Pillow==9.3.0
 platformdirs==2.6.0
 pre-commit==2.20.0
 psycopg2==2.9.5
-psycopg2-binary==2.9.5
 pycparser==2.21
 PyJWT==2.6.0
 python3-openid==3.2.0
@@ -44,7 +43,7 @@ social-auth-core==4.3.0
 sorl-thumbnail==12.9.0
 sqlparse==0.4.3
 toml==0.10.2
-typing_extensions==4.4.0
+typing-extensions==4.4.0
 uritemplate==4.1.1
 urllib3==1.26.13
 virtualenv==20.17.1
