@@ -2,12 +2,13 @@
 Автор: Фредди Андрес Парра
 Студент факультета Бэкенд. Когорта 14+ 
 
-apps.py -> настройки конфигурации приложения: foodgram_app
+Имя файла: apps.py
+Описание файла: настройки конфигурации приложения: foodgram_app.
 """
 from django.apps import AppConfig
 
 
 class FoodgramAppConfig(AppConfig):
-    """Method required when the Foodgram application is created."""
+    """Метод, необходимый при создании приложения Foodgram."""
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'foodgram_app'

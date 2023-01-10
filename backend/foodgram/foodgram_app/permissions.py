@@ -2,7 +2,7 @@
 Автор: Фредди Андрес Парра
 Студент факультета Бэкенд. Когорта 14+ 
 
-permissions.py -> 
+permissions.py -> разрешения пользователя.
 """
 from rest_framework.permissions import SAFE_METHODS, BasePermission
 

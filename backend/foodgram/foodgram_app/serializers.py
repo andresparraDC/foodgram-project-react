@@ -1,3 +1,9 @@
+""" Спринт 14 Проект «Продуктовый помощник»  
+Автор: Фредди Андрес Парра
+Студент факультета Бэкенд. Когорта 14+ 
+
+permissions.py -> разрешения пользователя.
+"""
 from django.shortcuts import get_object_or_404
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
