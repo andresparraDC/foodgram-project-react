@@ -9,4 +9,5 @@ from django.apps import AppConfig
 
 class FoodgramAppConfig(AppConfig):
     """Method required when the Foodgram application is created."""
+    default_auto_field = 'django.db.models.BigAutoField'
     name = 'foodgram_app'

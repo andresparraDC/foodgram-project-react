@@ -7,90 +7,177 @@
 Переменные:
 
 """
-from django.shortcuts import get_object_or_404, render
-from .models import Recipe, Tag, User
+from django.http.response import HttpResponse
+from djoser.views import UserViewSet
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
+from rest_framework.generics import get_object_or_404
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
 
-from .paginator import paginator_recipes
+from .filters import IngredientNameFilter, RecipeFilter
+from .models import (Favorite, Follow, Ingredient, IngredientofRecipe,
+                     Purchase, Recipe, Tag, User, )
+from .pagination import CustomPagination
+from .permissions import IsOwnerOrAdminOrReadOnly
+from .serializers import (FavoritesSerializer, ShowFollowerSerializer,
+                          FollowSerializer, IngredientSerializer,
+                          PurchaseSerializer, RecipeSerializer, TagSerializer,
+                          UserSerializer, )
 
 
 app_name = 'foodgram_app'
 
 
-def index(request):
-    """
-    Описание:     Главная страница
-    Переменные:
-    recipes       объекты модели рецепта
-    context       словарь с информацией для отправки
-                  в представление (HTML).
-    --title       title of the "head" section of the website.
-    --recipes     переменная с объектами (рецептами).
-    template      HTML-файл, который вы используете в представлении.
-    """
-    recipes = Recipe.objects.all()
-    page_obj = paginator_recipes(request, recipes, 1)
-    context = {
-        'title': 'Index Foodgram',
-        'page_obj': page_obj,
-    }
-    template = 'foodgram_app/index.html'
-    return render(
-        request,
-        template,
-        context
-    )
+class CustomUserViewSet(UserViewSet):
+    queryset = User.objects.all()
+    pagination_class = CustomPagination
+    serializer_class = UserSerializer
+    permission_classes = (IsOwnerOrAdminOrReadOnly,)
+
+    @action(detail=True, permission_classes=[IsAuthenticated])
+    def subscribe(self, request, id=None):
+        user = request.user
+        author = get_object_or_404(User, id=id)
+        data = {
+            'user': user.id,
+            'author': author.id,
+        }
+        serializer = FollowSerializer(
+            data=data, context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @subscribe.mapping.delete
+    def delete_subscribe(self, request, id=None):
+        user = request.user
+        author = get_object_or_404(User, id=id)
+        subscribe = get_object_or_404(
+            Follow, user=user, author=author
+        )
+        subscribe.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=False, permission_classes=[IsAuthenticated])
+    def subscriptions(self, request):
+        user = request.user
+        queryset = Follow.objects.filter(user=user)
+        pages = self.paginate_queryset(queryset)
+        serializer = ShowFollowerSerializer(
+            pages,
+            many=True,
+            context={'request': request}
+        )
+        return self.get_paginated_response(serializer.data)
 
 
-def tag_recipes(request, slug):
-    """
-    Описание:     
-    Переменные:
-    tag           ...
-    recipes       ...
-    context       словарь с информацией для отправки
-                  в представление (HTML).
-    --recipes     ...
-    --tag         ...
-    template      HTML-файл, который вы используете в представлении.
-    """
-    tag = get_object_or_404(Tag, slug=slug)
-    recipes = tag.recipes.all()[:6]
-    context = {
-        'recipes': recipes,
-        'tag': tag,
-    }
-    template = 'foodgram_app/tag_list.html'
-    return render(
-        request,
-        template,
-        context
-    )
+class TagViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer
+    permission_classes = (AllowAny,)
+    pagination_class = None
 
 
-def profile(request, username):
-    author = User.objects.get(username=username)
-    recipes = Recipe.objects.filter(author=author.pk)
-    page_obj = paginator_recipes(request, recipes, 2)
-    context = {
-        'author': author,
-        'page_obj': page_obj,
-    }
-    template = 'foodgram_app/profile.html'
-    return render(
-        request,
-        template,
-        context
-    )
+class IngredientsViewSet(viewsets.ModelViewSet):
+    serializer_class = IngredientSerializer
+    queryset = Ingredient.objects.all()
+    pagination_class = None
+    permission_classes = (AllowAny,)
+    filterset_class = IngredientNameFilter
 
 
-def recipe_detail(request, recipe_id):
-    recipe = get_object_or_404(Recipe, pk=recipe_id)
-    context = {
-        'recipe': recipe,
-    }
-    template = 'foodgram_app/recipe_detail.html'
-    return render(
-        request,
-        template,
-        context
-    )
+class RecipeViewSet(viewsets.ModelViewSet):
+    queryset = Recipe.objects.all()
+    pagination_class = CustomPagination
+    serializer_class = RecipeSerializer
+    permission_classes = (IsOwnerOrAdminOrReadOnly,)
+    filter_class = RecipeFilter
+
+    def perform_create(self, serializer):
+        user = self.request.user
+        return serializer.save(
+            author=user
+        )
+
+    @action(detail=True, permission_classes=[IsAuthenticated])
+    def favorite(self, request, pk=None):
+        user = request.user
+        recipe = get_object_or_404(
+            Recipe,
+            id=pk
+        )
+        data = {
+            'user': user.id,
+            'recipe': recipe.id,
+        }
+        serializer = FavoritesSerializer(
+            data=data,
+            context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @favorite.mapping.delete
+    def delete_favorite(self, request, pk=None):
+        user = request.user
+        recipe = get_object_or_404(Recipe, id=pk)
+        favorites = get_object_or_404(
+            Favorite, user=user, recipe=recipe
+        )
+        favorites.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=True, permission_classes=[IsAuthenticated])
+    def shopping_cart(self, request, pk=None):
+        user = request.user
+        recipe = get_object_or_404(Recipe, id=pk)
+
+        data = {
+            'user': user.id,
+            'recipe': recipe.id,
+        }
+        serializer = PurchaseSerializer(
+            data=data,
+            context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @shopping_cart.mapping.delete
+    def delete_shopping_cart(self, request, pk=None):
+        user = request.user
+        recipe = get_object_or_404(Recipe, id=pk)
+        favorites = get_object_or_404(
+            Purchase, user=user, recipe=recipe
+        )
+        favorites.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=False, permission_classes=[IsAuthenticated])
+    def download_shopping_cart(self, request):
+        shopping_list = {}
+        ingredients = IngredientofRecipe.objects.filter(
+            recipe__purchases__user=request.user
+        ).values('amount', 'ingredient__name', 'ingredient__measurement_unit')
+        for ingredient in ingredients:
+            amount = ingredient['amount']
+            name = ingredient['ingredient__name']
+            measurement_unit = ingredient['ingredient__measurement_unit']
+            if name not in shopping_list:
+                shopping_list[name] = {
+                    'measurement_unit': measurement_unit,
+                    'amount': amount
+                }
+            else:
+                shopping_list[name]['amount'] += amount
+        wishlist = ([f'{item} - {value["amount"]} '
+                     f'{value["measurement_unit"]} \n'
+                     for item, value in shopping_list.items()])
+        response = HttpResponse(wishlist, 'Content-Type: text/plain')
+        response['Content-Disposition'] = 'attachment; filename="shoplist.txt"'
+        return response

@@ -37,13 +37,6 @@ class Ingredient(models.Model):
         null=False,
         blank=False
     )
-    ##
-    ##amount = models.CharField(
-    ##    max_length=50,
-    ##    null=False,
-    ##    blank=False
-    ##)
-    ##
     measurement_unit = models.CharField(
         'Единица измерения',
         max_length=200,
@@ -55,6 +48,14 @@ class Ingredient(models.Model):
         verbose_name = 'Ингредиент',
         verbose_name_plural = 'Ингредиенты'
         ordering = ('name',)
+        constraints = [
+            models.UniqueConstraint(
+                fields=[
+                    'name', 'measurement_unit'
+                ],
+                name='unique ingredient'
+            )
+        ]
 
     def __str__(self) -> str:
         """The name and unit of measurement of Ingredient is displayed (string)""" 
@@ -70,13 +71,14 @@ class Tag(models.Model):
     slug          Уникальный слаг.
     """ 
     name = models.CharField(
-        'Название',
+        'Название тега',
         max_length=200,
         unique=True,
         blank=False,
-        db_index=True
+        db_index=True,
     )
     color = models.CharField(
+        'Цвет',
         max_length=7,
         unique=True,
         blank=False,
@@ -94,8 +96,6 @@ class Tag(models.Model):
     )
 
     class Meta:
-        """
-        """
         verbose_name='тег'
         verbose_name_plural = 'теги'
 
@@ -117,7 +117,7 @@ class Recipe(PubDateModel):
     cooking_time  Время приготовления (в минутах)
     """
     name = models.CharField(
-        'Название',
+        'Название рецепта',
         max_length=200,
         null=False,
         blank=False
@@ -129,7 +129,7 @@ class Recipe(PubDateModel):
         related_name='recipes'
     )
     text = models.TextField(
-        'Описание',
+        'Описание рецепта',
         null=False,
         blank=False
     )
@@ -141,37 +141,31 @@ class Recipe(PubDateModel):
     )
     ingredients = models.ManyToManyField(
         Ingredient,
-        verbose_name='Ингредиент',
+        verbose_name='Ингредиенты',
         blank=False,
-        # foodgram_app.Recipe.ingredients: (fields.W340)
-        # null has no effect on ManyToManyField.
-        # null=False,
         through='IngredientofRecipe'
     )
     tags = models.ManyToManyField(
         Tag,
         verbose_name='Теги',
         blank=False,
-        # foodgram_app.Recipe.ingredients: (fields.W340)
-        # null has no effect on ManyToManyField.
-        # null=False,
         related_name='recipes'
     )
-    cooking_time = models.PositiveIntegerField(
+    cooking_time = models.PositiveSmallIntegerField(
         'Время приготовления',
         validators=[
             MinValueValidator(
                 1,
-                message='Не менее 1.'
+                message='Время должно быть больше 1 минуты.'
             )
         ]
     )
 
     class Meta:
-        """Meta class of the Recipe model (by publication date).""" 
+        """Meta class of the Recipe model (by date created).""" 
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
-        ordering = ['-pub_date']
+        ordering = ['-created']
 
     def __str__(self) -> str:
         """The name of Recipe is displayed (string)"""
@@ -186,20 +180,24 @@ class IngredientofRecipe(models.Model):
     ingredient    
     recipe        
     """
-    amount = models.PositiveIntegerField(
+    amount = models.PositiveSmallIntegerField(
         'Количество ингредиента',
-        #max_length=50,
-        #null=False,
-        #blank=False
+         validators=[
+            MinValueValidator(
+                1,
+                message='Количество не может быть меньше 1.'
+            )
+        ]
     )
     ingredient = models.ForeignKey(
         Ingredient,
         verbose_name='Ингредиент',
         related_name='ingredients_amount',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
     )
     recipe = models.ForeignKey(
         Recipe,
+        verbose_name='Рецепт',
         related_name='ingredients_amount',
         on_delete=models.CASCADE
     )
@@ -209,8 +207,10 @@ class IngredientofRecipe(models.Model):
         verbose_name_plural = 'Количество ингредиентов',
         constraints = [
             models.UniqueConstraint(
-                fields=['ingredient', 'recipe'],
-                name='recipe_ingredient_unique'
+                fields=[
+                    'ingredient', 'recipe'
+                ],
+                name='recipe_ingredient_unique',
             )
         ]
 
@@ -226,19 +226,24 @@ class Favorite(PubDateModel):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='favorite_subscriber'
+        verbose_name='Пользователь',
+        related_name='favorite_subscriber',
     )
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='favorite_recipe'
+        verbose_name='Рецепт',
+        related_name='favorite_recipe',
     )
 
     class Meta:
         verbose_name = 'Избранное',
+        verbose_name_plural = 'Избранные'
         constraints = [
             models.UniqueConstraint(
-                fields=['user', 'recipe'],
+                fields=[
+                    'user', 'recipe'
+                ],
                 name='favorite_user_recept_unique'
             )
         ]
