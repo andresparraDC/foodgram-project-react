@@ -1,18 +1,18 @@
 """ Спринт 14 Проект «Продуктовый помощник»  
-Автор: Фредди Андрес Парра
-Студент факультета Бэкенд. Когорта 14+ 
+Автор   Фредди Андрес Парра
+        Студент факультета Бэкенд. Когорта 14+
 
 Имя файла: admin.py
 Описание файла: настройки панели администратора.
-Переменные:
-    IngredientAdmin
-    IngredientofRecipeAdmin
-    RecipeAdmin
-    TagAdmin
-    PurchaseAdmin
-    FavoriteAdmin
-    SubscriptionAdmin
-    RecipeIngredientAdmin
+Классы:
+ - IngredientAdmin
+ - IngredientofRecipeAdmin
+ - RecipeAdmin
+ - TagAdmin
+ - PurchaseAdmin
+ - FavoriteAdmin
+ - SubscriptionAdmin
+ - RecipeIngredientAdmin
 """
 from django.contrib import admin
 

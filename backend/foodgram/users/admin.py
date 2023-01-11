@@ -1,11 +1,11 @@
 """ Спринт 14 Проект «Продуктовый помощник»  
-Автор: Фредди Андрес Парра
-Студент факультета Бэкенд. Когорта 14+ 
+Автор   Фредди Андрес Парра
+        Студент факультета Бэкенд. Когорта 14+
 
 Имя файла: admin.py
 Описание файла: настройки панели администратора.
-Переменные:
-
+Классы:
+ - UserAdmin
 """
 from django.contrib import admin
 from django.contrib.auth import get_user_model
@@ -27,7 +27,5 @@ class UserAdmin(admin.ModelAdmin):
         'username', 'email',
     )
 
-
 admin.site.register(User, UserAdmin)
-
 admin.site.unregister(Group)

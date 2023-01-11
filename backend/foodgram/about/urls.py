@@ -1,11 +1,12 @@
 """ Спринт 14 Проект «Продуктовый помощник»  
-Автор: Фредди Андрес Парра
-Студент факультета Бэкенд. Когорта 14+
+Автор   Фредди Андрес Парра
+        Студент факультета Бэкенд. Когорта 14+
 
 Имя файла: urls.py
 Описание файла: записывает все адреса в приложении: about
 Переменные:
- - urlpatterns: список адресов
+ - app_name     ссылка на приложение about
+ - urlpatterns  список адресов
 """
 from django.urls import path
 
@@ -16,8 +17,6 @@ app_name = 'about'
 
 
 urlpatterns = [ 
-    # 
     path('author/', views.AboutAuthorView.as_view(), name='author'),
-    #  
     path('tech/', views.AboutTechView.as_view(), name='tech'), 
-] 
+]

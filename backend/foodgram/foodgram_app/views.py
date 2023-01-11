@@ -4,8 +4,11 @@
 
 Имя файла: views.py
 Описание файла: опишите все контроллеры
-Переменные:
-
+Классы:
+ - CustomUserViewSet
+ - TagViewSet
+ - IngredientsViewSet
+ - RecipeViewSet
 """
 from django.http.response import HttpResponse
 from djoser.views import UserViewSet
