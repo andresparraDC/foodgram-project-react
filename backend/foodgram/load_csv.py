@@ -1,11 +1,21 @@
+""" Спринт 14 Проект «Продуктовый помощник»  
+Автор   Фредди Андрес Парра
+        Студент факультета Бэкенд. Когорта 14+
+
+Имя файла: load_csv.py
+Описание файла: импортируйте CSV-файл ингредиентов.
+"""
 import os
+import csv
 import django
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "foodgram.settings")
+os.environ.setdefault(
+    "DJANGO_SETTINGS_MODULE",
+    "foodgram.settings"
+)
 django.setup()
-
-import csv
 from foodgram_app.models import Ingredient
+
 
 with open('ingredients.csv', encoding="utf-8") as f:
     reader = csv.reader(f)

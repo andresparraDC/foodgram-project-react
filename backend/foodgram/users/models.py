@@ -1,11 +1,13 @@
 """ Спринт 14 Проект «Продуктовый помощник»  
-Автор: Фредди Андрес Парра
-Студент факультета Бэкенд. Когорта 14+
+Автор   Фредди Андрес Парра
+        Студент факультета Бэкенд. Когорта 14+
 
 Имя файла: models.py
-Описание файла: 
-Переменные:
-
+Описание файла: указание моделей, их взаимосвязи и
+                указание таблиц для базы данных (users).
+Классы:
+ - CustomUserManager
+ - CustomUser
 """
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
