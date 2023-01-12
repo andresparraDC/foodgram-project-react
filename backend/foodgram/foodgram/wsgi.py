@@ -19,4 +19,6 @@ os.environ.setdefault(
     'foodgram.settings'
 )
 
+# путь до WSGI-модуля проекта, который представляет собой 
+# файл для запуска приложения в боевом режиме.
 application = get_wsgi_application()

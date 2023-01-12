@@ -43,7 +43,10 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    '*',
+    'https://stolovyana.ddns.net/',
+]
 
 # 1. Регистрация приложений: foodgram_app в рамках проекта.
 # 5. Пользовательский сервис.
@@ -216,8 +219,9 @@ USE_TZ = True
 # 3. Указание каталогов статических файлов.
 # Начните с шага 3.
 # -------------------------------------------------------------------
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_URL = '/foodgrambackend_static/'
+#STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'foodgrambackend_static/')
 # Завершите шаг 3.
 # -------------------------------------------------------------------
 
@@ -251,8 +255,8 @@ NUM_RECIPESAUTHOR_PAGE = 10
 # 16. Директории, куда будут загружаться файлы пользователей (media).
 # Начните с шага 16.
 # -------------------------------------------------------------------
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/foodgrambackend_media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'foodgrambackend_media/')
 # Завершите шаг 16.
 # -------------------------------------------------------------------
 
