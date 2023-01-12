@@ -4,20 +4,24 @@
 ### Статус
 ![main workflow](https://github.com/andresparraDC/foodgram-project-react/actions/workflows/main.yml/badge.svg)
 
-### Краткое описание
+## 1. Краткое описание
 
 Foodgram это ресурс для публикации рецептов.  
 Пользователи могут создавать свои рецепты, читать рецепты других пользователей, подписываться на интересных авторов, добавлять лучшие рецепты в избранное, а также создавать список покупок и загружать его в pdf формате.
 
-## Сайт
+### Сайт
 Сайт доступен по ссылке:
 [https://stolovyana.ddns.net/](https://stolovyana.ddns.net/)
 
-## Документация к API
+### Документация к API
 API документация доступна по ссылке (создана с помощью redoc):
 [https://stolovyana.ddns.net/api/docs/](https://stolovyana.ddns.net/api/docs/)
 
-# Технологии в проекте
+### Канал Telegram
+Still under construction ):
+[t.me/Stolovyana_bot](t.me/Stolovyana_bot)
+
+## 2. Технологии в проекте
 [![Python](https://img.shields.io/badge/-Python-464646?style=flat-square&logo=Python)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/-Django-464646?style=flat-square&logo=Django)](https://www.djangoproject.com/)
 [![Django REST Framework](https://img.shields.io/badge/-Django%20REST%20Framework-464646?style=flat-square&logo=Django%20REST%20Framework)](https://www.django-rest-framework.org/)
@@ -28,7 +32,7 @@ API документация доступна по ссылке (создана 
 [![GitHub%20Actions](https://img.shields.io/badge/-GitHub%20Actions-464646?style=flat-square&logo=GitHub%20actions)](https://github.com/features/actions)
 [![Yandex.Cloud](https://img.shields.io/badge/-Yandex.Cloud-464646?style=flat-square&logo=Yandex.Cloud)](https://cloud.yandex.ru/)
 
-# Инструкции по запуску
+## 3. Инструкции по запуску
 
 * Склонировать репозиторий на локальную машину:
 ```bash
@@ -76,7 +80,7 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-## Запуск проекта в Docker контейнере
+### Запуск проекта в Docker контейнере
 * Установите Docker.
 
 Параметры запуска описаны в файлах `docker-compose.yml` и `nginx.conf` которые находятся в директории `infra/`.  
@@ -90,6 +94,7 @@ docker-compose up -d --build
   > 1. контейнер базы данных **db**
   > 2. контейнер приложения **web**
   > 3. контейнер web-сервера **nginx**
+
 * Примените миграции:
 ```bash
 docker-compose exec web python manage.py migrate
@@ -108,6 +113,6 @@ docker-compose exec web python manage.py createsuperuser
 docker-compose exec web python manage.py collectstatic --noinput
 ```
 
-# Автор
+## 4. Автор
 [Фредди Андрес Парра](https://github.com/andresparraDC) - Python разработчик.
 Студент факультета Бэкенд. Когорта 14+
