@@ -27,7 +27,7 @@ class IngredientNameFilter(filters.FilterSet):
 
 
 class RecipeFilter(filters.FilterSet):
-    """Отфильтруйте рецепты по тегам, автору, в избранном 
+    """Отфильтруйте рецепты по тегам, автору, в избранном
     или в корзине покупок.
     """
     tags = filters.AllValuesMultipleFilter(
