@@ -47,7 +47,6 @@ jobs:
           file: ./backend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest
-
   deploy:
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -77,7 +76,6 @@ jobs:
             sudo docker-compose exec -T backend python manage.py migrate
             sudo docker-compose exec -T backend python manage.py load_csv
             sudo docker-compose exec -T backend python manage.py collectstatic --no-input
-            
   telegram_message:
     name: Send telegram message
     runs-on: ubuntu-latest
