@@ -293,7 +293,7 @@ class Purchase(PubDateModel):
     Переменные:
      - user      пользователь, который будет покупать.
      - recipe    рецепт для покупки.
-     - created   переменная: created из модели PubDateModel (приложение: core).     
+     - created   переменная: created из модели PubDateModel (приложение: core).
     """
     user = models.ForeignKey(
         User,

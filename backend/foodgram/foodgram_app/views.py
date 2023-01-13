@@ -1,4 +1,4 @@
-""" Спринт 14 Проект «Продуктовый помощник»  
+""" Спринт 14 Проект «Продуктовый помощник»
 Автор: Фредди Андрес Парра
 Студент факультета Бэкенд. Когорта 14+
 
@@ -20,14 +20,13 @@ from rest_framework.response import Response
 
 from .filters import IngredientNameFilter, RecipeFilter
 from .models import (Favorite, Follow, Ingredient, IngredientofRecipe,
-                     Purchase, Recipe, Tag, User, )
+                     Purchase, Recipe, Tag, User)
 from .pagination import CustomPagination
 from .permissions import IsOwnerOrAdminOrReadOnly
-from .serializers import (FavoritesSerializer, ShowFollowerSerializer,
-                          FollowSerializer, IngredientSerializer,
-                          PurchaseSerializer, RecipeSerializer, TagSerializer,
-                          UserSerializer, )
-
+from .serializers import (FavoritesSerializer, FollowSerializer,
+                          IngredientSerializer, PurchaseSerializer,
+                          RecipeSerializer, ShowFollowerSerializer,
+                          TagSerializer, UserSerializer)
 
 app_name = 'foodgram_app'
 
