@@ -41,7 +41,7 @@ jobs:
         with:
           push: true
           context: ./backend/foodgram/
-          file: .Dockerfile
+          file: ./backend/foodgram/Dockerfile
           tags: ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest
   deploy:
     if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
