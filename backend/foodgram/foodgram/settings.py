@@ -191,8 +191,8 @@ REST_FRAMEWORK = {
 # Начните с шага 18.
 # -------------------------------------------------------------------
 SIMPLE_JWT = {
-   'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
-   'AUTH_HEADER_TYPES': ('Bearer',),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_HEADER_TYPES': ('Bearer',),
 }
 # Завершите шаг 18.
 # -------------------------------------------------------------------
