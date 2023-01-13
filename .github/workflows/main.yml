@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  Test with flake8:
+  tests code:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
