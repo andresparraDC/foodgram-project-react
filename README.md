@@ -43,11 +43,17 @@ cd foodgram-project-react
 * Cоздать и активировать виртуальное окружение:
 
 ```bash
-python -m venv env
+python -m venv venv
 ```
 
 ```bash
-source env/bin/activate
+source venv/bin/activate
+```
+
+* Обновите pip перед установкой требований:
+
+```bash
+python -m pip install --upgrade pip
 ```
 
 * Cоздайте файл `.env` в директории `/infra/` с содержанием:
