@@ -1,4 +1,4 @@
-""" Спринт 14 Проект «Продуктовый помощник»  
+""" Спринт 14 Проект «Продуктовый помощник»
 Автор   Фредди Андрес Парра
         Студент факультета Бэкенд. Когорта 14+
 
@@ -72,7 +72,7 @@ class UserSerializer(serializers.ModelSerializer):
             'username', 'first_name',
             'last_name', 'is_subscribed'
         )
-    
+
     @transaction.atomic
     def get_is_subscribed(self, obj):
         request = self.context.get('request')
@@ -163,7 +163,8 @@ class RecipeSerializer(serializers.ModelSerializer):
             if ingredient_id in ingredients_set:
                 raise serializers.ValidationError(
                     {
-                        'ingredients': 'Ингредиент в рецепте не должен повторяться.'
+                        'ingredients': 'Ингредиент в рецепте не '
+                                       'должен повторяться.'
                     }
                 )
             ingredients_set.add(ingredient_id)
