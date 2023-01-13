@@ -1,4 +1,4 @@
-""" Спринт 14 Проект «Продуктовый помощник»  
+""" Спринт 14 Проект «Продуктовый помощник»
 Автор   Фредди Андрес Парра
         Студент факультета Бэкенд. Когорта 14+
 
@@ -15,12 +15,10 @@
  - Purchase             класс, который генерирует модель: Purchase.
 
 """
-from django.db import models
-from django.core.validators import MinValueValidator, RegexValidator
-from django.contrib.auth import get_user_model
-
 from core.models import PubDateModel
-
+from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator, RegexValidator
+from django.db import models
 
 User = get_user_model()
 
