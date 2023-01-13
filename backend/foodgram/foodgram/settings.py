@@ -82,7 +82,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-     #'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -129,14 +129,14 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 # Начните с шага 4.
 # -------------------------------------------------------------------
 # SQLITE3
-DATABASES = { 
-    'default': { 
-        'ENGINE': 'django.db.backends.sqlite3', 
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'), 
-    } 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
 }
 # POSTGRESQL
-#DATABASES = {
+# DATABASES = {
 #    'default': {
 #        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
 #        'NAME': os.getenv('DB_NAME', default='foodgramdb'),
@@ -145,7 +145,7 @@ DATABASES = {
 #        'HOST': os.getenv('DB_HOST', default='127.0.0.1'),
 #        'PORT': os.getenv('DB_PORT', default='5432')
 #    }
-#}
+# }
 # Завершите шаг 4
 # -------------------------------------------------------------------
 
@@ -172,7 +172,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # -------------------------------------------------------------------
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated', 
+        'rest_framework.permissions.IsAuthenticated',
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
@@ -191,10 +191,10 @@ REST_FRAMEWORK = {
 # Начните с шага 18.
 # -------------------------------------------------------------------
 SIMPLE_JWT = {
-    # Устанавливаем срок жизни токена
+   # Устанавливаем срок жизни токена
    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
    'AUTH_HEADER_TYPES': ('Bearer',),
-} 
+}
 # Завершите шаг 18.
 # -------------------------------------------------------------------
 
@@ -229,7 +229,7 @@ USE_TZ = True
 # Начните с шага 3.
 # -------------------------------------------------------------------
 STATIC_URL = '/foodgrambackend_static/'
-#STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+# STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'foodgrambackend_static/')
 # Завершите шаг 3.
 # -------------------------------------------------------------------
@@ -240,7 +240,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'foodgrambackend_static/')
 # -------------------------------------------------------------------
 LOGIN_URL = 'users:login'
 LOGIN_REDIRECT_URL = 'foodgram_app:index'
-#LOGOUT_REDIRECT_URL = 'foodgram_app:index'
+# LOGOUT_REDIRECT_URL = 'foodgram_app:index'
 # Завершите шаг 9.
 # -------------------------------------------------------------------
 
