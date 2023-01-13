@@ -4,7 +4,7 @@ WORKDIR /app
  
 COPY . .
  
-RUN pip3 install -r .requirements.txt --no-cache-dir
+RUN pip3 install -r .requirements.txt
  
 LABEL author='andrespa_90@hotmail.com' version=1 broken_keyboards=5
  
