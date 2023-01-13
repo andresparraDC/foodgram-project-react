@@ -1,4 +1,4 @@
-""" Спринт 14 Проект «Продуктовый помощник»  
+""" Спринт 14 Проект «Продуктовый помощник»
 Автор   Фредди Андрес Парра
         Студент факультета Бэкенд. Когорта 14+
 
@@ -63,10 +63,9 @@ class RecipeAdmin(admin.ModelAdmin):
     ]
 
     def favorited(self, obj):
-        favorited_count = Favorite.objects.filter(
+        return Favorite.objects.filter(
             recipe=obj
         ).count()
-        return favorited_count
 
     favorited.short_description = 'В избранном'
 

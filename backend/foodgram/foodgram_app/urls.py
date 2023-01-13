@@ -1,4 +1,4 @@
-""" Спринт 14 Проект «Продуктовый помощник»  
+""" Спринт 14 Проект «Продуктовый помощник»
 Автор   Фредди Андрес Парра
         Студент факультета Бэкенд. Когорта 14+
 
@@ -10,10 +10,8 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import (
-    CustomUserViewSet, IngredientsViewSet, RecipeViewSet, TagViewSet,
-)
-
+from .views import (CustomUserViewSet, IngredientsViewSet, RecipeViewSet,
+                    TagViewSet)
 
 app_name = 'foodgram_app'
 

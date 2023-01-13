@@ -7,15 +7,17 @@
 """
 import csv
 import os
-
 import django
+
+from foodgram_app.models import Ingredient
+
 
 os.environ.setdefault(
     "DJANGO_SETTINGS_MODULE",
     "foodgram.settings"
 )
 django.setup()
-from foodgram_app.models import Ingredient
+
 
 with open('ingredients.csv', encoding="utf-8") as f:
     reader = csv.reader(f)
