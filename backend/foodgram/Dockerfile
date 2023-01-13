@@ -3,8 +3,8 @@ FROM python:3.7-slim
 WORKDIR /app 
  
 COPY . .
- 
-RUN pip3 install -r .requirements.txt
+
+RUN pip install -r /app/requirements.txt
  
 LABEL author='andrespa_90@hotmail.com' version=1 broken_keyboards=5
  
