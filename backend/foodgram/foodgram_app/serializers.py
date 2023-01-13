@@ -182,7 +182,8 @@ class RecipeSerializer(serializers.ModelSerializer):
         if int(cooking_time) <= 0:
             raise serializers.ValidationError(
                 {
-                    'cooking_time': 'Время приготовления должно быть больше нуля.'
+                    'cooking_time': 'Время приготовления должно'
+                                    'быть больше нуля.'
                 }
             )
         # возврат подтвержденных данных. (return of data validated).
@@ -239,8 +240,8 @@ class ShowFollowerSerializer(serializers.ModelSerializer):
         fields = (
             'id', 'email',
             'username', 'first_name',
-            'last_name','is_subscribed',
-            'recipes', 'recipes_count'
+            'last_name', 'is_subscribed',
+            'recipes', 'recipes_count',
         )
 
     def get_is_subscribed(self, obj):
