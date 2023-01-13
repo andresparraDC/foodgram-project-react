@@ -163,7 +163,7 @@ class Recipe(PubDateModel):
         ]
     )
 
-    class Meta: 
+    class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
         ordering = ['-created']
@@ -179,8 +179,9 @@ class Favorite(PubDateModel):
     Переменные:
      - user         пользователь, которому нравится рецепт.
      - recipe       любимый рецепт.
-     - created      переменная: created из модели PubDateModel (приложение: core).
-    """    
+     - created      переменная: created из модели PubDateModel
+                    (приложение: core).
+    """
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -205,7 +206,7 @@ class Favorite(PubDateModel):
                 name='favorite_user_recept_unique'
             )
         ]
-    
+
     def __str__(self) -> str:
         """Отображается любимый рецепт пользователя (строка)."""
         return f'Рецепт {self.recipe} в избранном пользователя {self.user}'
@@ -218,7 +219,7 @@ class Follow(PubDateModel):
      - user     follower.
      - author   following.
      - created  переменная: created из модели PubDateModel (приложение: core).
-    """  
+    """
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
@@ -239,7 +240,7 @@ class Follow(PubDateModel):
                 name='follow_unique'
             )
         ]
-    
+
     def __str__(self) -> str:
         """Это показывает, что пользователь подписался на автора (строка)."""
         return f'{self.user} подписан на {self.author}'
@@ -255,12 +256,10 @@ class IngredientofRecipe(models.Model):
     """
     amount = models.PositiveSmallIntegerField(
         'Количество ингредиента',
-         validators=[
-            MinValueValidator(
-                1,
-                message='Количество не может быть меньше 1.'
-            )
-        ]
+         validators=[MinValueValidator(
+             1,
+             message='Количество не может быть меньше 1.'
+        )]
     )
     ingredient = models.ForeignKey(
         Ingredient,
