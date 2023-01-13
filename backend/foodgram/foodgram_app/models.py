@@ -256,9 +256,9 @@ class IngredientofRecipe(models.Model):
     """
     amount = models.PositiveSmallIntegerField(
         'Количество ингредиента',
-         validators=[MinValueValidator(
-             1,
-             message='Количество не может быть меньше 1.'
+        validators=[MinValueValidator(
+            1,
+            message='Количество не может быть меньше 1.'
         )]
     )
     ingredient = models.ForeignKey(
@@ -293,7 +293,7 @@ class Purchase(PubDateModel):
     Переменные:
      - user      пользователь, который будет покупать.
      - recipe    рецепт для покупки.
-     - created   переменная: created из модели PubDateModel (приложение: core).       
+     - created   переменная: created из модели PubDateModel (приложение: core).     
     """
     user = models.ForeignKey(
         User,
@@ -316,7 +316,7 @@ class Purchase(PubDateModel):
                 name='purchase_user_recipe_unique'
             )
         ]
-    
+
     def __str__(self) -> str:
         """Покажите, что рецепт есть в списке покупок пользователя."""
         return f'Рецепт {self.recipe} в списке покупок {self.user}'
