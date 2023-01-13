@@ -1,4 +1,4 @@
-""" Спринт 14 Проект «Продуктовый помощник»  
+""" Спринт 14 Проект «Продуктовый помощник»
 Автор   Фредди Андрес Парра
         Студент факультета Бэкенд. Когорта 14+
 
@@ -7,8 +7,7 @@
 Переменные:
  - urlpatterns: список адресов
 """
-from django.urls import path, include
-
+from django.urls import include, path
 
 urlpatterns = [
     path('', include('djoser.urls')),
