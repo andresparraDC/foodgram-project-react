@@ -58,7 +58,7 @@ class Ingredient(models.Model):
         ]
 
     def __str__(self) -> str:
-        """Отображается название и единица измерения ингредиента (строка).""" 
+        """Отображается название и единица измерения ингредиента (строка)."""
         return f'{self.name}, {self.measurement_unit}'
 
 
@@ -69,7 +69,7 @@ class Tag(models.Model):
      - name     Название тега.
      - color    Цвет в HEX.
      - slug     Уникальный слаг.
-    """ 
+    """
     name = models.CharField(
         'Название тега',
         max_length=200,
@@ -96,11 +96,11 @@ class Tag(models.Model):
     )
 
     class Meta:
-        verbose_name='тег'
+        verbose_name = 'тег'
         verbose_name_plural = 'теги'
 
     def __str__(self) -> str:
-        """Отображается название тега (строка).""" 
+        """Отображается название тега (строка)."""
         return f'Название тега: {self.name}'
 
 
@@ -115,7 +115,8 @@ class Recipe(PubDateModel):
      - ingredients   Список ингредиентов.
      - tags          Список тегов.
      - cooking_time  Время приготовления (в минутах).
-     - created      переменная: created из модели PubDateModel (приложение: core).
+     - created       переменная: created из модели PubDateModel
+                     (приложение: core).
     """
     name = models.CharField(
         'Название рецепта',
