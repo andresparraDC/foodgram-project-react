@@ -6,8 +6,8 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ../backend/foodgram/foodgram/.env
-  web:
-    build: .
+  foodgram_backend:
+    image: freddyandresparraorellana/foodgram_backend:latest
     restart: always
     expose:
       - 8000:8000
@@ -19,14 +19,12 @@ services:
     env_file:
       - ../backend/foodgram/foodgram/.env
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: ../frontend/Dockerfile
+    image: freddyandresparraorellana/foodgram_frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
       - db
-      - web
+      - foodgram_backend
   nginx:
     image: nginx:1.21.3-alpine
     ports:
@@ -40,7 +38,7 @@ services:
     restart: always
     depends_on:
       - db
-      - web
+      - foodgram_backend
       - frontend
     env_file:
       - ../backend/foodgram/foodgram/.env

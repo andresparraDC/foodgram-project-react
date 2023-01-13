@@ -98,25 +98,25 @@ docker-compose up -d --build
 ```  
   > После сборки появляются 3 контейнера:
   > 1. контейнер базы данных **db**
-  > 2. контейнер приложения **web**
+  > 2. контейнер приложения **foodgram**
   > 3. контейнер web-сервера **nginx**
 
 * Примените миграции:
 ```bash
-docker-compose exec web python manage.py migrate
+docker-compose exec foodgram python manage.py migrate
 ```
 * Загрузите ингредиенты:
 ```bash
-docker-compose exec web python manage.py load_csv
+docker-compose exec foodgram python manage.py load_csv
 ```
 
 * Создайте администратора:
 ```bash
-docker-compose exec web python manage.py createsuperuser
+docker-compose exec foodgram python manage.py createsuperuser
 ```
 * Соберите статику:
 ```bash
-docker-compose exec web python manage.py collectstatic --noinput
+docker-compose exec foodgram python manage.py collectstatic --noinput
 ```
 
 ## 4. Автор
