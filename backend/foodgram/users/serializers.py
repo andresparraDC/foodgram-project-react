@@ -1,4 +1,4 @@
-""" Спринт 14 Проект «Продуктовый помощник»  
+""" Спринт 14 Проект «Продуктовый помощник»
 Автор   Фредди Андрес Парра
         Студент факультета Бэкенд. Когорта 14+
 
@@ -11,10 +11,8 @@
 """
 from django.contrib.auth import get_user_model
 from djoser.conf import settings
-from djoser.serializers import (
-    UserSerializer, UserCreateSerializer, SetPasswordSerializer,
-)
-
+from djoser.serializers import (SetPasswordSerializer, UserCreateSerializer,
+                                UserSerializer)
 
 User = get_user_model()
 
