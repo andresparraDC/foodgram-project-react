@@ -82,10 +82,12 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'foodgram.urls'
@@ -124,6 +126,8 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 # Завершите шаг 19
 # -------------------------------------------------------------------
 
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_URLS_REGEX = r'^/api/.*$'
 
 # 4. Настройка базы данных
 # Начните с шага 4.
@@ -198,14 +202,17 @@ SIMPLE_JWT = {
 # -------------------------------------------------------------------
 
 DJOSER = {
-    'LOGIN_FIELD': 'email',
-    'PASSWORD_RESET_CONFIRM_URL': 'users/reset_password/{uid}/{token}',
-    'USERNAME_RESET_CONFIRM_URL': 'users/reset_email/{uid}/{token}',
-    'ACTIVATION_URL': 'users/activation/{uid}/{token}',
-    'SERIALIZERS': {
-        'user': 'users.serializers.CustomUserSerializer',
-        'user_create': 'users.serializers.CustomUserCreateSerializer',
-        'set_password': 'users.serializers.CustomSetPasswordSerializer',
+    "LOGIN_FIELD": 'email',
+    "SEND_ACTIVATION_EMAIL": False,
+    'HIDE_USERS': False,
+    "SERIALIZERS": {
+        "user_create": "users.serializers.CustomUserCreateSerializer",
+        "user": "users.serializers.CustomUserSerializer",
+        "current_user": "users.serializers.CustomUserSerializer",
+    },
+    'PERMISSIONS': {
+        'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
+        'user_list': ['rest_framework.permissions.AllowAny']
     },
 }
 
