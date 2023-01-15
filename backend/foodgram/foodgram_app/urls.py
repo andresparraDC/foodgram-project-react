@@ -10,19 +10,13 @@
 from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
-from .views import (CustomUserViewSet, IngredientsViewSet, RecipeViewSet,
-                    TagViewSet)
-
-app_name = 'foodgram_app'
-
+from .views import IngredientsViewSet, RecipeViewSet, TagsViewSet
 
 router = DefaultRouter()
-
-router.register('tags', TagViewSet, basename='tags')
 router.register('recipes', RecipeViewSet, basename='recipes')
 router.register('ingredients', IngredientsViewSet, basename='ingredients')
-router.register('users', CustomUserViewSet, basename='users')
+router.register('tags', TagsViewSet, basename='tags')
 
 urlpatterns = [
-    path('', include(router.urls))
+    path('', include(router.urls)),
 ]

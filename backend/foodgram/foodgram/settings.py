@@ -136,7 +136,7 @@ DATABASES = {
     }
 }
 # POSTGRESQL
-# DATABASES = {
+#DATABASES = {
 #    'default': {
 #        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
 #        'NAME': os.getenv('DB_NAME', default='foodgramdb'),
@@ -145,7 +145,7 @@ DATABASES = {
 #        'HOST': os.getenv('DB_HOST', default='127.0.0.1'),
 #        'PORT': os.getenv('DB_PORT', default='5432')
 #    }
-# }
+#}
 # Завершите шаг 4
 # -------------------------------------------------------------------
 
@@ -268,6 +268,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'foodgrambackend_media/')
 # Завершите шаг 16.
 # -------------------------------------------------------------------
 
-AUTH_USER_MODEL = 'users.CustomUser'
+AUTH_USER_MODEL = 'users.User'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

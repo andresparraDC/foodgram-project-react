@@ -16,69 +16,58 @@
 """
 from django.contrib import admin
 
-from .models import (Favorite, Follow, Ingredient, IngredientofRecipe,
-                     Purchase, Recipe, Tag)
+from .models import (Favorite, Ingredient, IngredientAmount, Recipe,
+                     ShoppingCart, Tag)
 
 
-class FavoriteAdmin(admin.ModelAdmin):
-    """модель Favorite включена в панели администратора."""
-    list_display = ('user', 'recipe')
-
-
-class FollowAdmin(admin.ModelAdmin):
-    """модель Subscription включена в панели администратора."""
-    list_display = ('author', 'user')
-
-
-class IngredientAdmin(admin.ModelAdmin):
-    """модель Ingredient включена в панели администратора."""
-    list_display = ('name', 'measurement_unit')
-    search_fields = ('^name',)
-
-
-class RecipeIngredientAdmin(admin.ModelAdmin):
-    """модель RecipeIngredient включена в панели администратора."""
-    list_display = ('recipe', 'ingredient', 'amount')
-
-
-class IngredientofRecipeAdmin(admin.TabularInline):
-    """модель IngredientofRecipe включена в панели администратора."""
-    model = IngredientofRecipe
-    fk_name = 'recipe'
-
-
-class PurchaseAdmin(admin.ModelAdmin):
-    """модель Purchase включена в панели администратора."""
-    list_display = ('user', 'recipe')
-
-
-class RecipeAdmin(admin.ModelAdmin):
-    """модель Recipe включена в панели администратора."""
-    list_display = ('author', 'name', 'favorited')
-    list_filter = ('author', 'name', 'tags')
-    exclude = ('ingredients',)
-
-    inlines = [
-        IngredientofRecipeAdmin,
-    ]
-
-    def favorited(self, obj):
-        return Favorite.objects.filter(
-            recipe=obj
-        ).count()
-
-    favorited.short_description = 'В избранном'
-
-
+@admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    """модель Tag включена в панели администратора."""
-    list_display = ('name', 'color', 'slug')
+    list_display = ('id', 'name', 'slug')
+    empty_value_display = '-пусто-'
 
 
-admin.site.register(Favorite, FavoriteAdmin)
-admin.site.register(Follow, FollowAdmin)
-admin.site.register(Ingredient, IngredientAdmin)
-admin.site.register(IngredientofRecipe, RecipeIngredientAdmin)
-admin.site.register(Purchase, PurchaseAdmin)
-admin.site.register(Recipe, RecipeAdmin)
-admin.site.register(Tag, TagAdmin)
+@admin.register(Ingredient)
+class IngredientAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'measurement_unit')
+    list_filter = ('name',)
+    search_fields = ('name',)
+    empty_value_display = '-пусто-'
+
+
+@admin.register(Recipe)
+class RecipeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name', 'author', 'amount_favorites',
+                    'amount_tags', 'amount_ingredients')
+    list_filter = ('author', 'name', 'tags')
+    search_fields = ('name',)
+    empty_value_display = '-пусто-'
+
+    @staticmethod
+    def amount_favorites(obj):
+        return obj.favorites.count()
+
+    @staticmethod
+    def amount_tags(obj):
+        return "\n".join([i[0] for i in obj.tags.values_list('name')])
+
+    @staticmethod
+    def amount_ingredients(obj):
+        return "\n".join([i[0] for i in obj.ingredients.values_list('name')])
+
+
+@admin.register(IngredientAmount)
+class IngredientAmountAdmin(admin.ModelAdmin):
+    list_display = ('id', 'ingredient', 'recipe', 'amount')
+    empty_value_display = '-пусто-'
+
+
+@admin.register(Favorite)
+class FavoriteAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'recipe')
+    empty_value_display = '-пусто-'
+
+
+@admin.register(ShoppingCart)
+class ShoppingCartAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'recipe')
+    empty_value_display = '-пусто-'
