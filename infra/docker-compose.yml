@@ -7,7 +7,9 @@ services:
     env_file:
       - ../backend/foodgram/foodgram/.env
   foodgram_backend:
-    image: freddyandresparraorellana/foodgram_backend:latest
+    build:
+      context: ../backend/foodgram
+      dockerfile: Dockerfile
     expose:
       - "8000:8000"
     volumes:
