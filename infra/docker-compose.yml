@@ -7,9 +7,7 @@ services:
     env_file:
       - ../backend/foodgram/foodgram/.env
   foodgram_backend:
-    build:
-      context: ../backend/foodgram
-      dockerfile: Dockerfile
+    image: freddyandresparraorellana/foodgram_backend:latest
     expose:
       - "8000:8000"
     volumes:
@@ -20,9 +18,7 @@ services:
     env_file:
       - ../backend/foodgram/foodgram/.env
   frontend:
-    build:
-      context: ../frontend
-      dockerfile: ../frontend/Dockerfile
+    image: freddyandresparraorellana/foodgram_frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
