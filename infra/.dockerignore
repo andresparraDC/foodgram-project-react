@@ -3,9 +3,3 @@
 #         Студент факультета Бэкенд. Когорта 14+
 
 # Разработка файла .dockerignore
-.git
-.cache
-**/*.class
-*.md
-!README*.md
-README-secret.md

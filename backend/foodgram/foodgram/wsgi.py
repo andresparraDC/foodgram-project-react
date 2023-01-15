@@ -10,15 +10,8 @@ For more information on this file, see
 https://docs.djangoproject.com/en/2.2/howto/deployment/wsgi/
 """
 import os
-
 from django.core.wsgi import get_wsgi_application
 
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'foodgram.settings')
 
-os.environ.setdefault(
-    'DJANGO_SETTINGS_MODULE',
-    'foodgram.settings'
-)
-
-# путь до WSGI-модуля проекта, который представляет собой
-# файл для запуска приложения в боевом режиме.
 application = get_wsgi_application()
