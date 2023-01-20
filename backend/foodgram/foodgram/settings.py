@@ -107,7 +107,6 @@ TEMPLATES = [
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
-                # Вот оно, нужное:
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'core.context_processors.year.year',
@@ -142,12 +141,12 @@ CORS_URLS_REGEX = r'^/api/.*$'
 # POSTGRESQL
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.postgresql'),
-        'NAME': os.getenv('DB_NAME', default='foodgramdb'),
-        'USER': os.getenv('POSTGRES_USER', default='foodgram_andres'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='foodgram_andres'),
-        'HOST': os.getenv('DB_HOST', default='127.0.0.1'),
-        'PORT': os.getenv('DB_PORT', default='5432')
+        'ENGINE': os.getenv("DB_ENGINE", default="django.db.backends.postgresql"),
+        'NAME': os.getenv("DB_NAME", default="foodgramdb"),
+        'USER': os.getenv("POSTGRES_USER", default="foodgram_andres"),
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD", default="foodgram_andres"),
+        'HOST': os.getenv("DB_HOST", default="localhost"),
+        'PORT': os.getenv("DB_PORT", default=5432)
     }
 }
 # Завершите шаг 4
@@ -202,17 +201,14 @@ SIMPLE_JWT = {
 # -------------------------------------------------------------------
 
 DJOSER = {
-    "LOGIN_FIELD": 'email',
-    "SEND_ACTIVATION_EMAIL": False,
-    'HIDE_USERS': False,
-    "SERIALIZERS": {
-        "user_create": "users.serializers.CustomUserCreateSerializer",
-        "user": "users.serializers.CustomUserSerializer",
-        "current_user": "users.serializers.CustomUserSerializer",
-    },
-    'PERMISSIONS': {
-        'user': ['djoser.permissions.CurrentUserOrAdminOrReadOnly'],
-        'user_list': ['rest_framework.permissions.AllowAny']
+    'LOGIN_FIELD': 'email',
+    'PASSWORD_RESET_CONFIRM_URL': 'users/reset_password/{uid}/{token}',
+    'USERNAME_RESET_CONFIRM_URL': 'users/reset_email/{uid}/{token}',
+    'ACTIVATION_URL': 'users/activation/{uid}/{token}',
+    'SERIALIZERS': {
+        'user': 'users.serializers.CustomUserSerializer',
+        'user_create': 'users.serializers.CustomUserCreateSerializer',
+        'set_password': 'users.serializers.CustomSetPasswordSerializer',
     },
 }
 
@@ -275,6 +271,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'foodgrambackend_media/')
 # Завершите шаг 16.
 # -------------------------------------------------------------------
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'users.CustomUser'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
