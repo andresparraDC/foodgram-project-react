@@ -120,13 +120,14 @@ class RecipeViewSet(ModelViewSet):
             'amount'
         )
         for i in ingredients:
-            if i[0] not in shopping_list:
-                shopping_list[i[0]] = {
+            name = i[0]
+            if name not in shopping_list:
+                shopping_list[name] = {
                     'measurement_unit': i[1],
-                    'amount': i[2]
+                    'amount': i[2],
                 }
             else:
-                shopping_list[i[0]]['amount'] += i[2]
+                shopping_list[name]['amount'] += i[2]
         pdfmetrics.registerFont(
             TTFont(
                 'Handicraft',
