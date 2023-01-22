@@ -22,15 +22,17 @@ from .models import (Favorite, Ingredient, IngredientAmount, Recipe,
 
 class TagAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'name',
         'color',
-        'slug'
+        'slug',
     )
     empty_value_display = '-пусто-'
 
 
 class IngredientAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'name',
         'measurement_unit'
     )
@@ -50,12 +52,12 @@ class RecipeAdmin(admin.ModelAdmin):
     list_display = (
         'name', 'author',
         'amount_favorites', 'amount_tags',
-        'amount_ingredients'
+        'amount_ingredients',
     )
     list_filter = (
         'author',
         'name',
-        'tags'
+        'tags',
     )
     exclude = (
         'ingredients',
@@ -82,25 +84,28 @@ class RecipeAdmin(admin.ModelAdmin):
 
 class IngredientAmountAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'ingredient',
         'recipe',
-        'amount'
+        'amount',
     )
     empty_value_display = '-пусто-'
 
 
 class FavoriteAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'user',
-        'recipe'
+        'recipe',
     )
     empty_value_display = '-пусто-'
 
 
 class ShoppingCartAdmin(admin.ModelAdmin):
     list_display = (
+        'id',
         'user',
-        'recipe'
+        'recipe',
     )
     empty_value_display = '-пусто-'
 

@@ -19,9 +19,9 @@ app_name = 'foodgram_app'
 
 
 router = DefaultRouter()
-router.register('tags', TagsViewSet, basename='tags')
+router.register('tags', TagsViewSet, basename='tags') #
 router.register('recipes', RecipeViewSet, basename='recipes')
-router.register('ingredients', IngredientsViewSet, basename='ingredients')
+router.register('ingredients', IngredientsViewSet, basename='ingredients') #
 router.register('users', CustomUserViewSet, basename='users')
 
 urlpatterns = [
