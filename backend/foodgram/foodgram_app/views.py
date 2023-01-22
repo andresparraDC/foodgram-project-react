@@ -11,6 +11,7 @@
  - RecipeViewSet
 """
 from django.http import HttpResponse
+#from weasyprint import HTML
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from reportlab.pdfbase import pdfmetrics
@@ -30,6 +31,7 @@ from .permissions import IsAuthorOrReadOnly
 from .serializers import (FavoriteSerializer, IngredientSerializer,
                           RecipeListSerializer, RecipeSerializer,
                           ShoppingCartSerializer, TagSerializer)
+from django.template.loader import render_to_string
 
 
 class TagsViewSet(ReadOnlyModelViewSet):
@@ -68,9 +70,12 @@ class RecipeViewSet(ModelViewSet):
     pagination_class = CustomPageNumberPagination
 
     def get_serializer_class(self):
-        if self.action in ('list', 'retrieve'):
-            return RecipeListSerializer
-        return RecipeSerializer
+        #if self.action in ('list', 'retrieve'):
+        #    return RecipeListSerializer
+        #return RecipeSerializer
+        if self.request.method in ('POST', 'PATCH',):
+            return RecipeSerializer
+        return RecipeListSerializer
 
     @staticmethod
     def post_method_for_actions(request, pk, serializers):
@@ -128,30 +133,38 @@ class RecipeViewSet(ModelViewSet):
                 }
             else:
                 shopping_list[name]['amount'] += i[2]
-        pdfmetrics.registerFont(
-            TTFont(
-                'Handicraft',
-                'Handicraft.ttf',
-                'UTF-8'
-            )
-        )
-        response = HttpResponse(
-            content_type='application/pdf'
-        )
-        response['Content-Disposition'] = ('attachment; '
-                                           'filename="shopping_list.pdf"')
-        page = canvas.Canvas(response)
-        page.setFont('Handicraft', size=24)
-        page.drawString(200, 800, 'Список покупок')
-        page.setFont('Handicraft', size=16)
-        for i, (name, data) in enumerate(shopping_list.items(), 1):
-            page.drawString(
-                75,
-                750,
-                (f'{i}. {name} - {data[2]} '
-                 f'{data[1]}')
-            )
-            height -= 25
-        page.showPage()
-        page.save()
-        return response
+#        html_template = render_to_string('pdf_template.html',
+#                                         {'ingredients': shopping_list})
+#        html = HTML(string=html_template)
+#        result = html.write_pdf()
+#        response = HttpResponse(result, content_type='application/pdf;')
+#        response['Content-Disposition'] = 'inline; filename=cart_list.pdf'
+#        response['Content-Transfer-Encoding'] = 'binary'
+#        return response
+#        pdfmetrics.registerFont(
+#            TTFont(
+#                'Handicraft',
+#                'Handicraft.ttf',
+#                'UTF-8'
+#            )
+#        )
+#        response = HttpResponse(
+#            content_type='application/pdf'
+#        )
+#        response['Content-Disposition'] = ('attachment; '
+#                                           'filename="shopping_list.pdf"')
+#        page = canvas.Canvas(response)
+#        page.setFont('Handicraft', size=24)
+#        page.drawString(200, 800, 'Список покупок')
+#        page.setFont('Handicraft', size=16)
+#        for i, (name, data) in enumerate(shopping_list.items(), 1):
+#            page.drawString(
+#                75,
+#                750,
+#                (f'{i}. {name} - {data[2]} '
+#                 f'{data[1]}')
+#            )
+#            height -= 25
+#        page.showPage()
+#        page.save()
+#        return response

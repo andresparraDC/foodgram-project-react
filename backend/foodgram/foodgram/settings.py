@@ -134,23 +134,23 @@ CORS_URLS_REGEX = r'^/api/.*$'
 # Начните с шага 4.
 # -------------------------------------------------------------------
 # SQLITE3
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.sqlite3',
-#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#    }
-#}
-# POSTGRESQL
 DATABASES = {
     'default': {
-        'ENGINE': os.getenv("DB_ENGINE", default="django.db.backends.postgresql"),
-        'NAME': os.getenv("DB_NAME", default="foodgramdb"),
-        'USER': os.getenv("POSTGRES_USER", default="foodgram_andres"),
-        'PASSWORD': os.getenv("POSTGRES_PASSWORD", default="foodgram_andres"),
-        'HOST': os.getenv("DB_HOST", default="db"),
-        'PORT': os.getenv("DB_PORT", default=5432)
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+# POSTGRESQL
+#DATABASES = {
+#    'default': {
+#        'ENGINE': os.getenv("DB_ENGINE", default="django.db.backends.postgresql"),
+#        'NAME': os.getenv("DB_NAME", default="foodgramdb"),
+#        'USER': os.getenv("POSTGRES_USER", default="foodgram_andres"),
+#        'PASSWORD': os.getenv("POSTGRES_PASSWORD", default="foodgram_andres"),
+#        'HOST': os.getenv("DB_HOST", default="db"),
+#        'PORT': os.getenv("DB_PORT", default=5432)
+#    }
+#}
 # Завершите шаг 4
 # -------------------------------------------------------------------
 

@@ -59,21 +59,42 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
         model = IngredientAmount
         fields = ('id', 'name', 'measurement_unit', 'amount')
 
+
+class IngredientInRecipeSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField(source='ingredient.id')
+    amount = serializers.IntegerField()
+
+    class Meta:
+        model = IngredientAmount
+        fields = ('id', 'amount',)
+
 # LISTO
 class RecipeListSerializer(serializers.ModelSerializer):
     """
     Сериализатор для отображения рецептов
     """
-    tags = TagSerializer(
+#    author = CustomUserSerializer(
+#        read_only=True
+#    )
+    author = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='username',
+        default=serializers.CurrentUserDefault(),
+    )
+
+#    tags = TagSerializer(
+#        many=True,
+#        read_only=True
+#    )
+
+    ingredients = IngredientAmountSerializer(
+        source='ingredients_recipe',
         many=True,
         read_only=True
     )
-    author = CustomUserSerializer(
-        read_only=True
-    )
-    ingredients = serializers.SerializerMethodField(
-        read_only=True
-    )
+
+    image = Base64ImageField()
+
     is_favorited = serializers.SerializerMethodField(
         read_only=True
     )
@@ -130,7 +151,7 @@ class RecipeSerializer(serializers.ModelSerializer):
     """
     image = Base64ImageField()
     author = CustomUserSerializer(read_only=True)
-    tags = TagSerializer(many=True, read_only=True)
+    #tags = TagSerializer(many=True, read_only=True)
     ingredients = AddIngredientSerializer(
         source='ingredients_amount',
         many=True,
@@ -198,7 +219,6 @@ class RecipeSerializer(serializers.ModelSerializer):
                 raise serializers.ValidationError({
                     'amount': 'Количество ингредиента должно быть больше нуля!'
                 })
-        data['ingredients'] = ingredients
         if int(self.initial_data.get('cooking_time')) <= 0:
             raise serializers.ValidationError(
                 ('Время приготовления должно быть '
@@ -210,24 +230,50 @@ class RecipeSerializer(serializers.ModelSerializer):
                 ('Необходимо добавить хотя бы'
                  'один тэг')
             )
-        data['tags'] = tags
+        tags_list = []
+        for tag_item in tags:
+            tag = get_object_or_404(Tag, id=tag_item)
+            if tag in tags_list:
+                raise serializers.ValidationError(
+                    {'tags': 'Теги в рецепте не должны повторяться'}
+                )
+            tags_list.append(tag)
         cooking_time = data['cooking_time']
         if int(cooking_time) <= 0:
             raise serializers.ValidationError({
                 'cooking_time': 'Время приготовления должно быть больше 0!'
             })
+        data['author'] = self.context.get('request').user
+        data['ingredients'] = ingredients
         data['cooking_time'] = cooking_time
+        data['tags'] = tags
         return data
 
+    def create_ingredients(self, ingredients, recipe):
+        """Создаем связку ингредиентов для рецепта"""
+        for ingredient_item in ingredients:
+            IngredientAmount.objects.bulk_create(
+                [IngredientAmount(
+                    ingredient_id=ingredient_item['id'],
+                    recipe=recipe,
+                    amount=ingredient_item['amount']
+                )]
+            )
+
     def create(self, validated_data):
-        author = self.context.get('request').user
         tags = validated_data.pop('tags')
+        image = validated_data.pop('image')
         ingredients = validated_data.pop('ingredients')
+        author = self.context.get('request').user
         recipe = Recipe.objects.create(
             author=author,
+            image=image,
             **validated_data
         )
-        self.get_ingredients_amount(tags, ingredients, recipe)
+        recipe.tags.set(tags)
+        #self.get_ingredients_amount(tags, ingredients, recipe)
+        self.create_ingredients(ingredients, recipe)
+        recipe.save()
         return recipe
 
     def to_representation(self, instance):
