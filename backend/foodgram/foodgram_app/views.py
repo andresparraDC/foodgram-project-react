@@ -133,7 +133,7 @@ class RecipeViewSet(ModelViewSet):
         pdfmetrics.registerFont(
             TTFont(
                 'Handicraft',
-                './data/Handicraft.ttf',
+                'Handicraft.ttf',
                 'UTF-8'
             )
         )
