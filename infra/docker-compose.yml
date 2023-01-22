@@ -41,7 +41,7 @@ services:
       - static_value:/app/backend_static/
       - media_value:/app/backend_media/
     depends_on:
-      - foodgram_backend
+      - backend
     env_file:
       - ../backend/foodgram/foodgram/.env
 

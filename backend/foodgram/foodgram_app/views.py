@@ -121,7 +121,7 @@ class RecipeViewSet(ModelViewSet):
         )
         for i in ingredients:
             if i[0] not in shopping_list:
-                shopping_list[name] = {
+                shopping_list[i[0]] = {
                     'measurement_unit': i[1],
                     'amount': i[2]
                 }
