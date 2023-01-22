@@ -24,7 +24,7 @@ from foodgram_app.models import (Favorite, Ingredient, IngredientAmount, Recipe,
 from users.serializers import CustomUserSerializer
 from django.shortcuts import get_object_or_404
 
-# LISTO
+
 class TagSerializer(serializers.ModelSerializer):
     """
     Сериализатор для тегов
@@ -32,9 +32,9 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = '__all__'
-        #read_only_fields = '__all__',
+        read_only_fields = '__all__',
 
-# LISTO
+
 class IngredientSerializer(serializers.ModelSerializer):
     """
     Сериализатор для ингредиентов
@@ -42,9 +42,9 @@ class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
         fields = '__all__'
-        #read_only_fields = '__all__',
+        read_only_fields = '__all__',
 
-# LISTO
+
 class IngredientAmountSerializer(serializers.ModelSerializer):
     """
     Сериализатор для вывода количества ингредиентов
@@ -60,41 +60,20 @@ class IngredientAmountSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'measurement_unit', 'amount')
 
 
-class IngredientInRecipeSerializer(serializers.ModelSerializer):
-    id = serializers.ReadOnlyField(source='ingredient.id')
-    amount = serializers.IntegerField()
 
-    class Meta:
-        model = IngredientAmount
-        fields = ('id', 'amount',)
-
-# LISTO
 class RecipeListSerializer(serializers.ModelSerializer):
     """
     Сериализатор для отображения рецептов
     """
-#    author = CustomUserSerializer(
-#        read_only=True
-#    )
-    author = serializers.SlugRelatedField(
-        read_only=True,
-        slug_field='username',
-        default=serializers.CurrentUserDefault(),
+    author = CustomUserSerializer(
+        read_only=True
     )
-
-#    tags = TagSerializer(
-#        many=True,
-#        read_only=True
-#    )
-
-    ingredients = IngredientAmountSerializer(
-        source='ingredients_recipe',
+    tags = TagSerializer(
         many=True,
         read_only=True
     )
-
+    ingredients = serializers.SerializerMethodField(read_only=True)
     image = Base64ImageField()
-
     is_favorited = serializers.SerializerMethodField(
         read_only=True
     )
@@ -126,39 +105,30 @@ class RecipeListSerializer(serializers.ModelSerializer):
         return ShoppingCart.objects.filter(
             user=request.user, recipe=obj).exists()
 
-# LISTO
+
 class AddIngredientSerializer(serializers.ModelSerializer):
     """
     Сериализатор для добавления Ингредиентов
     """
-    id = serializers.ReadOnlyField(source='ingredient.id')
-    name = serializers.ReadOnlyField(source='ingredient.name')
-    measurement_unit = serializers.ReadOnlyField(
-        source='ingredient.measurement_unit'
-    )
+    id = serializers.PrimaryKeyRelatedField(queryset=Ingredient.objects.all())
+    amount = serializers.IntegerField()
 
     class Meta:
         model = IngredientAmount
         fields = (
-            'id', 'name',
-            'amount', 'measurement_unit'
+            'id', 'amount'
         )
 
-# LISTO
+
 class RecipeSerializer(serializers.ModelSerializer):
     """
     Сериализатор для добавления рецептов
     """
+    tags = serializers.PrimaryKeyRelatedField(
+        queryset=Tag.objects.all(), many=True)
     image = Base64ImageField()
+    ingredients = AddIngredientSerializer(many=True)
     author = CustomUserSerializer(read_only=True)
-    tags = TagSerializer(many=True, read_only=True)
-    ingredients = AddIngredientSerializer(
-        source='ingredients_amount',
-        many=True,
-        read_only=True,
-    )
-    is_favorited = serializers.SerializerMethodField()
-    is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
         model = Recipe
@@ -249,31 +219,30 @@ class RecipeSerializer(serializers.ModelSerializer):
         data['tags'] = tags
         return data
 
-    def create_ingredients(self, ingredients, recipe):
-        """Создаем связку ингредиентов для рецепта"""
-        for ingredient_item in ingredients:
-            IngredientAmount.objects.bulk_create(
-                [IngredientAmount(
-                    ingredient_id=ingredient_item['id'],
-                    recipe=recipe,
-                    amount=ingredient_item['amount']
-                )]
+    @staticmethod
+    def create_ingredients(ingredients, recipe):
+        for ingredient in ingredients:
+            IngredientAmount.objects.create(
+                recipe=recipe, ingredient=ingredient['id'],
+                amount=ingredient['amount']
             )
 
+    @staticmethod
+    def create_tags(tags, recipe):
+        for tag in tags:
+            recipe.tags.add(tag)
+
+
     def create(self, validated_data):
-        tags = validated_data.pop('tags')
-        image = validated_data.pop('image')
-        ingredients = validated_data.pop('ingredients')
         author = self.context.get('request').user
+        tags = validated_data.pop('tags')
+        ingredients = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(
             author=author,
-            image=image,
             **validated_data
         )
-        recipe.tags.set(tags)
-        #self.get_ingredients_amount(tags, ingredients, recipe)
+        self.create_tags(tags, recipe)
         self.create_ingredients(ingredients, recipe)
-        recipe.save()
         return recipe
 
     def to_representation(self, instance):
@@ -283,13 +252,12 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance.tags.clear()
-        ingredients = validated_data.pop('ingredients')
-        tags = validated_data.pop('tags')
         IngredientAmount.objects.filter(recipe=instance).delete()
-        self.get_ingredients_amount(tags=tags, ingredients=ingredients, recipe=instance)
+        self.create_tags(validated_data.pop('tags'), instance)
+        self.create_ingredients(validated_data.pop('ingredients'), instance)
         return super().update(instance, validated_data)
 
-# LISTO
+
 class ShortRecipeSerializer(serializers.ModelSerializer):
     """
     Сериализатор для краткого отображения сведений о рецепте
@@ -326,7 +294,7 @@ class FavoriteSerializer(serializers.ModelSerializer):
         return ShortRecipeSerializer(
             instance.recipe, context=context).data
 
-# LISTO
+
 class ShoppingCartSerializer(serializers.ModelSerializer):
     """
     Сериализатор для списка покупок

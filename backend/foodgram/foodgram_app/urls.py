@@ -15,9 +15,6 @@ from .views import IngredientsViewSet, RecipeViewSet, TagsViewSet
 from users.views import CustomUserViewSet
 
 
-app_name = 'foodgram_app'
-
-
 router = DefaultRouter()
 router.register('tags', TagsViewSet, basename='tags') #
 router.register('recipes', RecipeViewSet, basename='recipes')

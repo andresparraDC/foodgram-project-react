@@ -59,9 +59,9 @@ class RecipeAdmin(admin.ModelAdmin):
         'name',
         'tags',
     )
-    exclude = (
-        'ingredients',
-    )
+    #exclude = (
+    #    'ingredients',
+    #)
     search_fields = ('name',)
     empty_value_display = '-пусто-'
 

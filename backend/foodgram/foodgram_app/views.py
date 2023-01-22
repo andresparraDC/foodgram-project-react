@@ -70,12 +70,9 @@ class RecipeViewSet(ModelViewSet):
     pagination_class = CustomPageNumberPagination
 
     def get_serializer_class(self):
-        #if self.action in ('list', 'retrieve'):
-        #    return RecipeListSerializer
-        #return RecipeSerializer
-        if self.request.method in ('POST', 'PATCH',):
-            return RecipeSerializer
-        return RecipeListSerializer
+        if self.action in ('list', 'retrieve'):
+            return RecipeListSerializer
+        return RecipeSerializer
 
     @staticmethod
     def post_method_for_actions(request, pk, serializers):
