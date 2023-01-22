@@ -24,7 +24,7 @@ from rest_framework.viewsets import ModelViewSet, ReadOnlyModelViewSet
 
 from foodgram_app.models import (Favorite, Ingredient, IngredientAmount, Recipe,
                             ShoppingCart, Tag)
-from .filters import IngredientSearchFilter, RecipeFilter
+from .filters import IngredientNameFilter, RecipeFilter
 from .pagination import CustomPageNumberPagination
 from .permissions import IsAuthorOrReadOnly
 from .serializers import (FavoriteSerializer, IngredientSerializer,
@@ -40,6 +40,7 @@ class TagsViewSet(ReadOnlyModelViewSet):
     queryset = Tag.objects.all()
     permission_classes = (AllowAny,)
     serializer_class = TagSerializer
+    pagination_class = None
 
 
 class IngredientsViewSet(ReadOnlyModelViewSet):
@@ -50,8 +51,9 @@ class IngredientsViewSet(ReadOnlyModelViewSet):
     queryset = Ingredient.objects.all()
     permission_classes = (AllowAny, )
     serializer_class = IngredientSerializer
-    filter_backends = [IngredientSearchFilter]
+    filter_backends = [IngredientNameFilter]
     search_fields = ('^name',)
+    pagination_class = None
 
 
 class RecipeViewSet(ModelViewSet):
@@ -62,84 +64,117 @@ class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
     permission_classes = [IsAuthorOrReadOnly]
     filter_backends = [DjangoFilterBackend]
-    filterset_class = RecipeFilter
+    filter_class = RecipeFilter
     pagination_class = CustomPageNumberPagination
 
+    def perform_create(self, serializer):
+        return serializer.save(
+            author=self.request.user
+        )
+    
     def get_serializer_class(self):
         if self.action in ('list', 'retrieve'):
             return RecipeListSerializer
         return RecipeSerializer
 
-    @staticmethod
-    def post_method_for_actions(request, pk, serializers):
-        data = {'user': request.user.id, 'recipe': pk}
-        serializer = serializers(data=data, context={'request': request})
+    @action(detail=True, methods=["POST"],
+            permission_classes=[IsAuthenticated])
+    def favorite(self, request, pk):
+        user = request.user
+        recipe = get_object_or_404(Recipe, id=pk)
+        data = {
+            'user': user.id,
+            'recipe': recipe.id,
+        }
+        serializer = FavoriteSerializer(
+            data=data,
+            context={'request': request}
+        )
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    @staticmethod
-    def delete_method_for_actions(request, pk, model):
+    @favorite.mapping.delete
+    def delete_favorite(self, request, pk=None):
         user = request.user
         recipe = get_object_or_404(Recipe, id=pk)
-        model_obj = get_object_or_404(model, user=user, recipe=recipe)
-        model_obj.delete()
+        favorites = get_object_or_404(
+            Favorite, user=user, recipe=recipe
+        )
+        favorites.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=True, methods=["POST"],
             permission_classes=[IsAuthenticated])
-    def favorite(self, request, pk):
-        return self.post_method_for_actions(
-            request=request, pk=pk, serializers=FavoriteSerializer)
-
-    @favorite.mapping.delete
-    def delete_favorite(self, request, pk):
-        return self.delete_method_for_actions(
-            request=request, pk=pk, model=Favorite)
-
-    @action(detail=True, methods=["POST"],
-            permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, pk):
-        return self.post_method_for_actions(
-            request=request, pk=pk, serializers=ShoppingCartSerializer)
+        user = request.user
+        recipe = get_object_or_404(Recipe, id=pk)
+        data = {
+            'user': user.id,
+            'recipe': recipe.id,
+        }
+        serializer = ShoppingCartSerializer(
+            data=data,
+            context={'request': request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @shopping_cart.mapping.delete
-    def delete_shopping_cart(self, request, pk):
-        return self.delete_method_for_actions(
-            request=request, pk=pk, model=ShoppingCart)
+    def delete_shopping_cart(self, request, pk=None):
+        user = request.user
+        recipe = get_object_or_404(Recipe, id=pk)
+        favorites = get_object_or_404(
+            ShoppingCart,
+            user=user,
+            recipe=recipe
+        )
+        favorites.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, methods=['get'],
             permission_classes=[IsAuthenticated])
     def download_shopping_cart(self, request):
-        final_list = {}
+        shopping_list = {}
         ingredients = IngredientAmount.objects.filter(
-            recipe__carts__user=request.user).values_list(
-            'ingredient__name', 'ingredient__measurement_unit',
-            'amount'
-        )
-        for item in ingredients:
-            name = item[0]
-            if name not in final_list:
-                final_list[name] = {
-                    'measurement_unit': item[1],
-                    'amount': item[2]
+            recipe__carts__user=request.user
+            ).values(
+                'ingredient__name',
+                'ingredient__measurement_unit',
+                'amount'
+            )
+        for ingredient in ingredients:
+            amount = ingredient['amount']
+            name = ingredient['ingredient__name']
+            measurement_unit = ingredient['ingredient__measurement_unit']
+            if name not in shopping_list:
+                shopping_list[name] = {
+                    'measurement_unit': measurement_unit,
+                    'amount': amount
                 }
             else:
-                final_list[name]['amount'] += item[2]
+                shopping_list[name]['amount'] += amount
+        wishlist = ([f'{item} - {value["amount"]} '
+                     f'{value["measurement_unit"]} \n'
+                     for item, value in shopping_list.items()])
         pdfmetrics.registerFont(
-            TTFont('Handicraft', 'data/Handicraft.ttf', 'UTF-8'))
-        response = HttpResponse(content_type='application/pdf')
+            TTFont(
+                'Handicraft',
+                'data/Handicraft.ttf',
+                'UTF-8'
+            )
+        )
+        response = HttpResponse(
+            content_type='application/pdf'
+        )
         response['Content-Disposition'] = ('attachment; '
                                            'filename="shopping_list.pdf"')
         page = canvas.Canvas(response)
         page.setFont('Handicraft', size=24)
         page.drawString(200, 800, 'Список покупок')
         page.setFont('Handicraft', size=16)
-        height = 750
-        for i, (name, data) in enumerate(final_list.items(), 1):
-            page.drawString(75, height, (f'{i}. {name} - {data["amount"]} '
-                                         f'{data["measurement_unit"]}'))
-            height -= 25
+        page.drawText(75, 750, wishlist)
         page.showPage()
         page.save()
         return response

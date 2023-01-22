@@ -26,11 +26,3 @@ with open('ingredients.csv', encoding="utf-8") as f:
             name=row[0],
             measurement_unit=row[1],
         )
-
-with open('tags.csv', encoding="utf-8") as f:
-    reader = csv.reader(f)
-    for row in reader:
-        _, created = Tag.objects.get_or_create(
-            name=row[0],
-            measurement_unit=row[1],
-        )

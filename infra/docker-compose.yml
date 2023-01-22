@@ -10,7 +10,7 @@ services:
     env_file:
       - ../backend/foodgram/foodgram/.env
 
-  foodgram_backend:
+  backend:
     build:
       context: ../backend/foodgram
       dockerfile: Dockerfile
@@ -18,8 +18,8 @@ services:
     expose:
       - "8000"
     volumes:
-      - static_value:/app/foodgrambackend_static/
-      - media_value:/app/foodgrambackend_media/
+      - static_value:/app/backend_static/
+      - media_value:/app/backend_media/
     depends_on:
       - db
     env_file:
@@ -40,8 +40,8 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/:/usr/share/nginx/html/api/docs/
-      - static_value:/app/foodgrambackend_static/
-      - media_value:/app/foodgrambackend_media/
+      - static_value:/app/backend_static/
+      - media_value:/app/backend_media/
     depends_on:
       - foodgram_backend
     env_file:

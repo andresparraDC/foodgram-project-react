@@ -50,23 +50,27 @@ class CustomUserSerializer(UserSerializer):
     get_is_subscribed показывает,
     подписан ли текущий пользователь на просматриваемого.
     """
-    is_subscribed = serializers.SerializerMethodField(read_only=True)
+    is_subscribed = serializers.SerializerMethodField(
+        read_only=True
+    )
 
     class Meta:
         model = User
         fields = (
-            'email',
-            'id',
-            'username',
-            'first_name',
-            'last_name',
-            'is_subscribed')
+            'email', 'id',
+            'username', 'first_name',
+            'last_name','is_subscribed'
+        )
 
     def get_is_subscribed(self, obj):
+        request = self.context.get('request')
         user = self.context.get('request').user
-        if user.is_anonymous:
+        if request is None or user.is_anonymous:
             return False
-        return Follow.objects.filter(user=user, author=obj.id).exists()
+        return Follow.objects.filter(
+            user=user,
+            author=obj.id
+        ).exists()
 
 
 class ShortRecipeSerializer(serializers.ModelSerializer):

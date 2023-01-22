@@ -37,7 +37,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv('SECRET_KEY')
@@ -134,23 +134,23 @@ CORS_URLS_REGEX = r'^/api/.*$'
 # Начните с шага 4.
 # -------------------------------------------------------------------
 # SQLITE3
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-# POSTGRESQL
 #DATABASES = {
 #    'default': {
-#        'ENGINE': os.getenv("DB_ENGINE", default="django.db.backends.postgresql"),
-#        'NAME': os.getenv("DB_NAME", default="foodgramdb"),
-#        'USER': os.getenv("POSTGRES_USER", default="foodgram_andres"),
-#        'PASSWORD': os.getenv("POSTGRES_PASSWORD", default="foodgram_andres"),
-#        'HOST': os.getenv("DB_HOST", default="localhost"),
-#        'PORT': os.getenv("DB_PORT", default=5432)
+#        'ENGINE': 'django.db.backends.sqlite3',
+#        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #    }
 #}
+# POSTGRESQL
+DATABASES = {
+    'default': {
+        'ENGINE': os.getenv("DB_ENGINE", default="django.db.backends.postgresql"),
+        'NAME': os.getenv("DB_NAME", default="foodgramdb"),
+        'USER': os.getenv("POSTGRES_USER", default="foodgram_andres"),
+        'PASSWORD': os.getenv("POSTGRES_PASSWORD", default="foodgram_andres"),
+        'HOST': os.getenv("DB_HOST", default="db"),
+        'PORT': os.getenv("DB_PORT", default=5432)
+    }
+}
 # Завершите шаг 4
 # -------------------------------------------------------------------
 
@@ -231,9 +231,9 @@ USE_TZ = True
 # 3. Указание каталогов статических файлов.
 # Начните с шага 3.
 # -------------------------------------------------------------------
-STATIC_URL = '/foodgrambackend_static/'
+STATIC_URL = '/backend_static/'
 # STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'foodgrambackend_static/')
+STATIC_ROOT = os.path.join(BASE_DIR, 'backend_static')
 # Завершите шаг 3.
 # -------------------------------------------------------------------
 
@@ -267,8 +267,8 @@ NUM_RECIPESAUTHOR_PAGE = 10
 # 16. Директории, куда будут загружаться файлы пользователей (media).
 # Начните с шага 16.
 # -------------------------------------------------------------------
-MEDIA_URL = '/foodgrambackend_media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'foodgrambackend_media/')
+MEDIA_URL = '/backend_media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'backend_media')
 # Завершите шаг 16.
 # -------------------------------------------------------------------
 

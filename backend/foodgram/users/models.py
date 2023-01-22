@@ -110,6 +110,10 @@ class Follow(models.Model):
         related_name='following',
         verbose_name='Автор',
     )
+    subscription_date = models.DateField(
+        auto_now_add=True,
+        verbose_name='Дата подписки',
+    )
 
     class Meta:
         verbose_name = 'Подписка'
@@ -120,3 +124,6 @@ class Follow(models.Model):
                 name='unique follow',
             )
         ]
+
+    def __str__(self):
+        return f'{self.user} подписан на {self.author}'

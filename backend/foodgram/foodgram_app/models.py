@@ -15,7 +15,7 @@
  - Purchase             класс, который генерирует модель: Purchase.
 
 """
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 
 from users.models import User
@@ -49,9 +49,15 @@ class Tag(models.Model):
         'Название тега',
         max_length=200,
     )
+    hex_regex = RegexValidator(
+        regex=r'^#([A-Fa-f0-9]{6})$',
+        message='Enter a valid hexfigure: e.g. "ff0022"'
+    )
     color = models.CharField(
         'Цвет',
-        max_length=7
+        max_length=7,
+        validators=[hex_regex],
+        unique=True
     )
     slug = models.SlugField(
         'Адрес',
@@ -160,14 +166,22 @@ class Favorite(models.Model):
         related_name='favorites',
         verbose_name='Рецепт',
     )
+    date_added = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата добавления',
+    )
 
     class Meta:
         verbose_name = 'Избранное'
         verbose_name_plural = 'Избранные'
         constraints = [
-            models.UniqueConstraint(fields=['user', 'recipe'],
-                                    name='unique favorite')
+            models.UniqueConstraint(
+                fields=['user', 'recipe'], name='unique favorite'
+            )
         ]
+    
+    def __str__(self):
+        return f'Рецепт {self.recipe} в избранном у {self.user}'
 
 
 class ShoppingCart(models.Model):
@@ -183,11 +197,20 @@ class ShoppingCart(models.Model):
         related_name='carts',
         verbose_name='Рецепт',
     )
+    date_added = models.DateTimeField(
+        auto_now_add=True,
+        verbose_name='Дата добавления',
+    )
 
     class Meta:
-        verbose_name = 'Корзина'
-        verbose_name_plural = 'Корзина'
+        ordering = ('-date_added',)
+        verbose_name = 'Покупка'
+        verbose_name_plural = 'Покупки'
         constraints = [
-            models.UniqueConstraint(fields=['user', 'recipe'],
-                                    name='unique shopping cart')
+            models.UniqueConstraint(
+                fields=['user', 'recipe'], name='unique shopping cart'
+            )
         ]
+
+    def __str__(self):
+        return f'Рецепт {self.recipe} в списке покупок {self.user}'

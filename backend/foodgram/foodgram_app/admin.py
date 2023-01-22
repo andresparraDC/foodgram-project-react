@@ -20,27 +20,52 @@ from .models import (Favorite, Ingredient, IngredientAmount, Recipe,
                      ShoppingCart, Tag)
 
 
-@admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'slug')
+    list_display = (
+        'name',
+        'color',
+        'slug'
+    )
     empty_value_display = '-пусто-'
 
 
-@admin.register(Ingredient)
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'measurement_unit')
-    list_filter = ('name',)
-    search_fields = ('name',)
+    list_display = (
+        'name',
+        'measurement_unit'
+    )
+    #list_filter = ('name',)
+    search_fields = (
+        '^name',
+    )
     empty_value_display = '-пусто-'
 
 
-@admin.register(Recipe)
+class IngredientInRecipeAdmin(admin.TabularInline):
+    model = IngredientAmount
+    fk_name = 'recipe'
+
+
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'author', 'amount_favorites',
-                    'amount_tags', 'amount_ingredients')
-    list_filter = ('author', 'name', 'tags')
+    list_display = (
+        'name', 'author',
+        'amount_favorites', 'amount_tags',
+        'amount_ingredients'
+    )
+    list_filter = (
+        'author',
+        'name',
+        'tags'
+    )
+    exclude = (
+        'ingredients',
+    )
     search_fields = ('name',)
     empty_value_display = '-пусто-'
+
+    inlines = [
+        IngredientInRecipeAdmin,
+    ]
 
     @staticmethod
     def amount_favorites(obj):
@@ -55,19 +80,34 @@ class RecipeAdmin(admin.ModelAdmin):
         return "\n".join([i[0] for i in obj.ingredients.values_list('name')])
 
 
-@admin.register(IngredientAmount)
 class IngredientAmountAdmin(admin.ModelAdmin):
-    list_display = ('id', 'ingredient', 'recipe', 'amount')
+    list_display = (
+        'ingredient',
+        'recipe',
+        'amount'
+    )
     empty_value_display = '-пусто-'
 
 
-@admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'recipe')
+    list_display = (
+        'user',
+        'recipe'
+    )
     empty_value_display = '-пусто-'
 
 
-@admin.register(ShoppingCart)
 class ShoppingCartAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'recipe')
+    list_display = (
+        'user',
+        'recipe'
+    )
     empty_value_display = '-пусто-'
+
+
+admin.site.register(Tag, TagAdmin)
+admin.site.register(Ingredient, IngredientAdmin)
+admin.site.register(IngredientAmount, IngredientAmountAdmin)
+admin.site.register(Recipe, RecipeAdmin)
+admin.site.register(Favorite, FavoriteAdmin)
+admin.site.register(ShoppingCart, ShoppingCartAdmin)
