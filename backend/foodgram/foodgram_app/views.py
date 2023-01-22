@@ -119,17 +119,14 @@ class RecipeViewSet(ModelViewSet):
             'ingredient__name', 'ingredient__measurement_unit',
             'amount'
         )
-        for ingredient in ingredients:
-            name = ingredient['ingredient__name']
-            amount = ingredient['amount']
-            measurement_unit = ingredient['ingredient__measurement_unit']
-            if name not in shopping_list:
+        for i in ingredients:
+            if i[0] not in shopping_list:
                 shopping_list[name] = {
-                    'measurement_unit': measurement_unit,
-                    'amount': amount
+                    'measurement_unit': i[1],
+                    'amount': i[2]
                 }
             else:
-                shopping_list[name]['amount'] += amount
+                shopping_list[i[0]]['amount'] += i[2]
         pdfmetrics.registerFont(
             TTFont(
                 'Handicraft',
@@ -150,8 +147,8 @@ class RecipeViewSet(ModelViewSet):
             page.drawString(
                 75,
                 750,
-                (f'{i}. {name} - {data["amount"]} '
-                 f'{data["measurement_unit"]}')
+                (f'{i}. {name} - {data[2]} '
+                 f'{data[1]}')
             )
             height -= 25
         page.showPage()
