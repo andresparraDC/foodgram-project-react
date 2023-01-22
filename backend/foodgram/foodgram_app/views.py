@@ -66,13 +66,12 @@ class RecipeViewSet(ModelViewSet):
     queryset = Recipe.objects.all()
     permission_classes = [IsAuthorOrReadOnly]
     filter_backends = [DjangoFilterBackend]
+    serializer_class = RecipeSerializer
     filterset_class = RecipeFilter
     pagination_class = CustomPageNumberPagination
 
-    def get_serializer_class(self):
-        if self.action in ('list', 'retrieve'):
-            return RecipeListSerializer
-        return RecipeSerializer
+    def perform_create(self, serializer):
+        return serializer.save(author=self.request.user)
 
     @staticmethod
     def post_method_for_actions(request, pk, serializers):
@@ -130,6 +129,12 @@ class RecipeViewSet(ModelViewSet):
                 }
             else:
                 shopping_list[name]['amount'] += i[2]
+        wishlist = ([f'{item} - {value["amount"]} '
+                     f'{value["measurement_unit"]} \n'
+                     for item, value in shopping_list.items()])
+        response = HttpResponse(wishlist, 'Content-Type: text/plain')
+        response['Content-Disposition'] = 'attachment; filename="shoplist.txt"'
+        return response
 #        html_template = render_to_string('pdf_template.html',
 #                                         {'ingredients': shopping_list})
 #        html = HTML(string=html_template)
